@@ -1,4 +1,4 @@
-﻿namespace Music_Library.Models.Enums
+﻿namespace RazorMusic.Models.Enums
 {
     public enum AlbumTypes
     {

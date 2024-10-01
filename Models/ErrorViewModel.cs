@@ -1,4 +1,4 @@
-namespace Music_Library.Models
+namespace RazorMusic.Models
 {
     public class ErrorViewModel
     {

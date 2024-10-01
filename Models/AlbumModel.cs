@@ -1,11 +1,13 @@
-﻿namespace Music_Library.Models
+﻿using RazorMusic.Models.Enums;
+
+namespace RazorMusic.Models
 {
     public class AlbumModel
     {
         public string AlbumName { get; set; }
         public DateTime ReleaseDate { get; set; }
         public string Artist { get; set; }
-        public AlbumTypes AlbumType { get; set; }
+        public string AlbumType { get; set; }
         public string Description { get; set; }
         public string[] Tracks { get; set; } 
 
@@ -13,7 +15,7 @@
             string albumName,
             DateTime releaseDate,
             string artist,
-            AlbumTypes albumType,
+            string albumType,
             string description,
             string[] tracks
         ) {
