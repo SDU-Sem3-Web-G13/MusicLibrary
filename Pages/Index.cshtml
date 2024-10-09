@@ -5,8 +5,87 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome to uor websit</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    
+    <!-- Link CSS here (only for this page) -->
+    <link href="~/css/formPage.css" rel="stylesheet" />
+</head>
+<body>
+    
+
+<form action="">
+            <div class="row">
+                <p>Submission form</p>
+                <div class="col-lg-4">
+                    <p>Album Name</p>
+                    <input type="text">
+
+                    <p>Release Date</p>
+                    <input type="date">
+
+                </div>
+                <div class="col-lg-4">
+                    <p>Artist</p>
+                    <input type="text">
+
+                    <p>Type</p>
+                    <select name="type">
+                        <option value="1">Single</option>
+                        <option value="2">EP</option>
+                        <option value="3">LP</option>
+                    </select>
+
+                    <p>Description</p>
+                    <input class="Description" type="text">
+
+                </div>
+                <div class="col-lg-4">
+                    <p>Tracks</p>
+                <div>
+                    <ul >
+                      <li>
+                          <input type="text">
+                      </li>
+                      <li>
+                        <input type="text">
+                      </li>
+                      <li>
+                        <input type="text">
+                    </li>
+                    <li>
+                        <input type="text">
+                    </li>
+                    <li>
+                        <input type="text">
+                    </li>
+                    <li>
+                        <input type="text">
+                    </li>
+                    <li>
+                        <input type="text">
+                    </li>
+                    <li>
+                        <input type="text">
+                    </li>
+                    <li>
+                        <input type="text">
+                    </li>
+                    <li>
+                        <input type="text">
+                    </li>
+                    </ul>
+                </div>
+                </div>
+                <div class="button">
+                    <button class="button">Add album</button>
+
+                </div>
+        </form>
+</body>
+</html>
