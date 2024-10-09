@@ -19,10 +19,8 @@ ul li {
     font-size: 20px;
 }
 
-.button {
-    line-height: 40px;
-    border-radius: 7%;
-    border-color: rgb(18, 83, 213);
+.btn {
+    background-color: rgb(18, 83, 213);
     color: aliceblue;
 }
 

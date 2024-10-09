@@ -48,44 +48,20 @@
                 <div class="col-lg-4">
                     <p>Tracks</p>
                 <div>
-                    <ul >
-                      <li>
-                          <input type="text">
-                      </li>
-                      <li>
-                        <input type="text">
-                      </li>
-                      <li>
-                        <input type="text">
-                    </li>
-                    <li>
-                        <input type="text">
-                    </li>
-                    <li>
-                        <input type="text">
-                    </li>
-                    <li>
-                        <input type="text">
-                    </li>
-                    <li>
-                        <input type="text">
-                    </li>
-                    <li>
-                        <input type="text">
-                    </li>
-                    <li>
-                        <input type="text">
-                    </li>
-                    <li>
-                        <input type="text">
-                    </li>
+                    <ul id="list-container">
+                        <li>
+                            <input type="text">
+                        </li>
                     </ul>
+                    <button onclick="addTrack()" class="btn btn-outline-secondary add" type="button" id="button-addon1">Add</button>
+                    <button onclick="deleteTrack()" class="btn btn-outline-secondary delete" type="button" id="button-addon1">Delete</button>
                 </div>
                 </div>
                 <div class="button">
-                    <button class="button">Add album</button>
+                <button class="btn btn-outline-secondary submit" type="button" id="button-addon1">Add album</button>
 
                 </div>
         </form>
+    <script src="~/js/formPage.js"></script>
 </body>
 </html>
