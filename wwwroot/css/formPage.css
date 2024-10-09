@@ -39,5 +39,9 @@ button {
 }
 
 .date {
-    border-radius: 50 px;
+    border-radius: 50px;
+}
+
+.razmery {
+    height: 400px;
 }
