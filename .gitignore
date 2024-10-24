@@ -396,7 +396,3 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-
-# Database stuff
-Models/DataAccess/_Setup/.env
-Models/DataAccess/_Setup/venv/*
