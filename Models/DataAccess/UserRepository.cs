@@ -15,42 +15,52 @@ namespace DataAccess
             dbAccess = new DbAccess();
         }
 
+       
+
         public void AddUser(string name, string mail)
         {
-            string sql = "INSERT INTO users (name, mail) VALUES (@name, @mail)";
+            string sql = "INSERT INTO USERS (U_NAME, U_MAIL) VALUES (@name, @mail)";
             dbAccess.ExecuteNonQuery(sql, ("@name", name), ("@mail", mail));
 
         }
 
-        public void DeleteUser(int id)
+        public void DeleteUser(string name)
         {
-            string sql = "DELETE FROM users WHERE id = @id";
+            string idSql = "SELECT U_ID FROM USERS WHERE U_NAME = @name";
+            int id = dbAccess.GetId(idSql, "@name", name);
+            string sql = "DELETE FROM USERS WHERE U_ID = @id";
             dbAccess.ExecuteNonQuery(sql, ("@id", id));
         }
 
         public void ModifyUser(int id, string name, string mail)
         {
-            string sql = "UPDATE users SET name = @name, mail = @mail WHERE id = @id";
+            string sql = "UPDATE USERS SET U_NAME = @name, U_MAIL = @mail WHERE U_ID = @id";
             dbAccess.ExecuteNonQuery(sql, ("@id", id), ("@name", name), ("@mail", mail));
         }
 
-        public void AddUserCredentials(byte mail, byte password)
+        public void AddUserCredentials(byte[] mailHash, byte[] passHash)
         {
-            string sql = "INSERT INTO usercredentials (mail, password) VALUES (@mail, @password)";
-            dbAccess.ExecuteNonQuery(sql, ("@mail", mail), ("@password", password));
+            string sql = "INSERT INTO USER_CREDENTIALS (UMAIL_HASH, UPASS_HASH) VALUES (@mailHash, @passHash)";
+            dbAccess.ExecuteNonQuery(sql, ("@mailHash", mailHash), ("@passHash", passHash));
         }
 
-        public void ModifyUserCredintials(int id, byte mail, byte password)
+        public void ModifyUserCredentials(byte[] mailHash, byte[] passHash)
         {
-            string sql = "UPDATE usercredentials SET mail = @mail, password = @password WHERE id = @id";
-            dbAccess.ExecuteNonQuery(sql, ("@id", id), ("@mail", mail), ("@password", password));
+            string sql = "UPDATE USER_CREDENTIALS SET UPASS_HASH = @passHash WHERE UMAIL_HASH = @mailHash";
+            dbAccess.ExecuteNonQuery(sql, ("@mailHash", mailHash), ("@passHash", passHash));
         }
 
-        public void DeleteUserCredintials(int id)
+        public void DeleteUserCredentials(byte[] mailHash)
         {
-            string sql = "DELETE FROM usercredentials WHERE id = @id";
-            dbAccess.ExecuteNonQuery(sql, ("@id", id));
+            string sql = "DELETE FROM USER_CREDENTIALS WHERE UMAIL_HASH = @mailHash";
+            dbAccess.ExecuteNonQuery(sql, ("@mailHash", mailHash));
         }
+
+        
+
     }
 
 }
+
+
+

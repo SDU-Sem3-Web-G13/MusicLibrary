@@ -13,7 +13,7 @@ namespace DataAccess
         private string dbName { get; set; }
         private string port { get; set; }
         private string connectionString { get; set; }
-        private NpgsqlDataSource dbDataSource { get; set; }
+        public NpgsqlDataSource dbDataSource { get; set; }
 
         public DbAccess()
         {
@@ -24,7 +24,8 @@ namespace DataAccess
             password = Env.GetString("POSTGRES_PASSWORD");
             dbName = Env.GetString("POSTGRES_DB");
             port = Env.GetString("POSTGRES_PORT");
-            connectionString = $"Host=localhost;Port={port};Database={dbName};User Id={user};Password={password};";
+            //connectionString = $"Host=localhost;Port={port};Database={dbName};User Id={user};Password={password};";
+            connectionString = "Host=localhost;Port=5434;Database=docker;User Id=docker;Password=docker;";
 
             dbDataSource = NpgsqlDataSource.Create(connectionString);
         }
@@ -48,6 +49,32 @@ namespace DataAccess
                 throw;
             }
         }
+
+        public int GetId(string sql, string name, string value)
+        {
+            try
+            {
+                using (var cmd = dbDataSource.CreateCommand(sql))
+                {
+                    cmd.Parameters.AddWithValue(name, value);
+                    
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        reader.Read();
+                        return reader.GetInt32(0);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"An error occurred: {ex.Message}");
+                throw;
+            }
+        }
+
+        
+
+
 
     }
 }
