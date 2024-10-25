@@ -12,4 +12,8 @@
     <PackageReference Include="Npgsql" Version="8.0.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\RazorMusic.csproj" />
+  </ItemGroup>
+
 </Project>
