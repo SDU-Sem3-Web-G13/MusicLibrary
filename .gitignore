@@ -400,4 +400,4 @@ FodyWeavers.xsd
 # Database stuff
 Models/DataAccess/_Setup/.env
 Models/DataAccess/_Setup/venv/*
-Models/DataAccess/_Setup/user-sql
+Models/DataAccess/_Setup/user.sql
