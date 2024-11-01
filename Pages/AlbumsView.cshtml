@@ -1,0 +1,45 @@
+﻿@page
+@model RazorMusic.Pages.AlbumsViewModel
+@using RazorMusic.Models
+@{
+}
+<div class="container">
+    <h1>Your Albums</h1>
+    <br />
+    <div class="row">
+        @foreach (var album in Model.Albums)
+        {
+            <div class="col-md-4">
+                <div class="card mb-4 shadow-sm rounded" onclick="toggleDetails('details-@album.AlbumName.Replace(" ", "-")')" style="cursor: pointer;">
+                    <div class="card-body">
+                        <h5 class="card-title">@album.AlbumName</h5>
+                        <p class="card-text">Artist: @album.Artist</p>
+                    </div>
+                    <div id="details-@album.AlbumName.Replace(" ", "-")" class="card-body" style="display: none;">
+                        <p class="card-text">Release Date: @album.ReleaseDate.ToShortDateString()</p>
+                        <p class="card-text">Type: @album.AlbumType</p>
+                        <p class="card-text">Description: @album.Description</p>
+                        <p class="card-text">Tracks:</p>
+                        <ul>
+                            @foreach (var track in album.Tracks)
+                            {
+                                <li>@track</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    function toggleDetails(id) {
+        var element = document.getElementById(id);
+        if (element.style.display === "none") {
+            element.style.display = "block";
+        } else {
+            element.style.display = "none";
+        }
+    }
+</script>

@@ -3,6 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
+
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorMusic", "RazorMusic.csproj", "{64979946-C78F-4E0E-8BC3-A3C406F17366}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csproj", "{3F95152C-57FC-4289-8812-3A8E10390C02}"
@@ -11,9 +12,6 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{64979946-C78F-4E0E-8BC3-A3C406F17366}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -24,5 +22,11 @@ Global
 		{3F95152C-57FC-4289-8812-3A8E10390C02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3F95152C-57FC-4289-8812-3A8E10390C02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3F95152C-57FC-4289-8812-3A8E10390C02}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A60A1ED9-BB59-49D7-BF54-7CD24BD6301C}
 	EndGlobalSection
 EndGlobal
