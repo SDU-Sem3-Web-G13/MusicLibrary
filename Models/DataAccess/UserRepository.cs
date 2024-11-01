@@ -1,0 +1,66 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Models.DataAccess
+{
+    internal class UserRepository
+    {
+        private readonly DbAccess dbAccess;
+
+        public UserRepository()
+        {
+            dbAccess = new DbAccess();
+        }
+
+       
+
+        public void AddUser(string name, string mail)
+        {
+            string sql = "INSERT INTO USERS (U_NAME, U_MAIL) VALUES (@name, @mail)";
+            dbAccess.ExecuteNonQuery(sql, ("@name", name), ("@mail", mail));
+
+        }
+
+        public void DeleteUser(string name)
+        {
+            string idSql = "SELECT U_ID FROM USERS WHERE U_NAME = @name";
+            int id = dbAccess.GetId(idSql, "@name", name);
+            string sql = "DELETE FROM USERS WHERE U_ID = @id";
+            dbAccess.ExecuteNonQuery(sql, ("@id", id));
+        }
+
+        public void ModifyUser(int id, string name, string mail)
+        {
+            string sql = "UPDATE USERS SET U_NAME = @name, U_MAIL = @mail WHERE U_ID = @id";
+            dbAccess.ExecuteNonQuery(sql, ("@id", id), ("@name", name), ("@mail", mail));
+        }
+
+        public void AddUserCredentials(byte[] mailHash, byte[] passHash)
+        {
+            string sql = "INSERT INTO USER_CREDENTIALS (UMAIL_HASH, UPASS_HASH) VALUES (@mailHash, @passHash)";
+            dbAccess.ExecuteNonQuery(sql, ("@mailHash", mailHash), ("@passHash", passHash));
+        }
+
+        public void ModifyUserCredentials(byte[] mailHash, byte[] passHash)
+        {
+            string sql = "UPDATE USER_CREDENTIALS SET UPASS_HASH = @passHash WHERE UMAIL_HASH = @mailHash";
+            dbAccess.ExecuteNonQuery(sql, ("@mailHash", mailHash), ("@passHash", passHash));
+        }
+
+        public void DeleteUserCredentials(byte[] mailHash)
+        {
+            string sql = "DELETE FROM USER_CREDENTIALS WHERE UMAIL_HASH = @mailHash";
+            dbAccess.ExecuteNonQuery(sql, ("@mailHash", mailHash));
+        }
+
+        
+
+    }
+
+}
+
+
+

@@ -1,11 +1,11 @@
 ﻿using RazorMusic.Models.Enums;
 
-namespace RazorMusic.Models
+namespace Models
 {
     public class AlbumModel
     {
         public string AlbumName { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
         public string Artist { get; set; }
         public string AlbumType { get; set; }
         public string Description { get; set; }

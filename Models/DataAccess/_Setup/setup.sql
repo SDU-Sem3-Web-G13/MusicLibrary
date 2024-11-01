@@ -1,0 +1,35 @@
+BEGIN;
+
+-- User Related Tables
+
+CREATE TABLE USERS (
+    U_ID SERIAL PRIMARY KEY,
+    U_NAME VARCHAR(50) NOT NULL,
+    U_MAIL VARCHAR(72) NOT NULL -- 72 is the maximum input length for BCrypt
+);
+
+CREATE TABLE USER_CREDENTIALS (
+    -- Bcrypt has an output of 60 bytes
+    UMAIL_HASH BYTEA NOT NULL PRIMARY KEY,
+    UPASS_HASH BYTEA NOT NULL
+);
+
+-- Album Related Tables
+
+CREATE TABLE ALBUMS (
+    A_ID SERIAL PRIMARY KEY,
+    A_OWNER INTEGER NOT NULL,
+    A_COVER BYTEA NOT NULL, -- Album cover image
+    A_NAME VARCHAR(50) NOT NULL,
+    A_RELEASEDATE DATE,
+    A_ARTIST VARCHAR(50) NOT NULL,
+    A_TYPE VARCHAR(15) NOT NULL,
+    A_DESC TEXT,
+    A_TRACKS VARCHAR(50)[] NOT NULL -- Array of track names
+);
+
+-- Album Constraints
+
+ALTER TABLE ALBUMS ADD CONSTRAINT fk_album_owner FOREIGN KEY (A_OWNER) REFERENCES USERS(U_ID);
+
+COMMIT;
