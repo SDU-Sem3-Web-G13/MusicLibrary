@@ -1,7 +1,7 @@
 ﻿using System;
-using RazorMusic.Models;
+using Models;
 
-namespace DataAccess
+namespace Models.DataAccess
 {
     internal class AlbumRepository
     {
@@ -44,15 +44,14 @@ namespace DataAccess
                 {
                     while (reader.Read())
                     {
-                        AlbumModel album = new AlbumModel()
-                        {
-                            AlbumName = reader.GetString(3),
-                            ReleaseDate = reader.GetDateTime(5),
-                            Artist = reader.GetString(6),
-                            AlbumType = reader.GetString(7),
-                            Description = reader.GetString(8),
-                            Tracks = reader.GetString(9).Split(", ")
-                        };
+                        AlbumModel album = new AlbumModel(
+                            reader.GetString(3),
+                            reader.GetDateTime(5),
+                            reader.GetString(6),
+                            reader.GetString(7),
+                            reader.GetString(8),
+                            reader.GetString(9).Split(", ")
+                        );
                         albums.Add(album);
                     }
                 }

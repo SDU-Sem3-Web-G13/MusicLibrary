@@ -4,7 +4,7 @@ using DotNetEnv;
 using Npgsql;
 using System.Diagnostics;
 
-namespace DataAccess
+namespace Models.DataAccess
 {
     public class DbAccess
     {

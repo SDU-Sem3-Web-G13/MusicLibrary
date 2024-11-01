@@ -1,6 +1,6 @@
 ﻿using RazorMusic.Models.Enums;
 
-namespace RazorMusic.Models
+namespace Models
 {
     public class AlbumModel
     {
