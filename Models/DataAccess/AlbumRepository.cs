@@ -1,7 +1,8 @@
 ﻿using System;
 using Models;
+using Models.DataAccess;
 
-namespace Models.DataAccess
+namespace AlbumRepository
 {
     internal class AlbumRepository
     {

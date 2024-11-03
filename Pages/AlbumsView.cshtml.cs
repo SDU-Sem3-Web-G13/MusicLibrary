@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorMusic.Models;
+using Models;
 
 namespace RazorMusic.Pages
 {
