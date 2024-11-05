@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using RazorMusic.Models;
-using RazorMusic.Models.Enums;
+using Models;
+using Models.Enums;
 
 namespace RazorMusic.Pages;
 
