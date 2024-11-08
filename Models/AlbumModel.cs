@@ -1,4 +1,4 @@
-﻿using RazorMusic.Models.Enums;
+﻿using Models.Enums;
 
 namespace Models
 {
