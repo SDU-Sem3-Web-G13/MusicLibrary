@@ -1,6 +1,7 @@
 ﻿@page
 @model RazorMusic.Pages.AlbumsViewModel
-@using RazorMusic.Models
+@using Models
+@using System
 @{
 }
 <div class="container">
@@ -16,7 +17,7 @@
                         <p class="card-text">Artist: @album.Artist</p>
                     </div>
                     <div id="details-@album.AlbumName.Replace(" ", "-")" class="card-body" style="display: none;">
-                        <p class="card-text">Release Date: @album.ReleaseDate.ToShortDateString()</p>
+                        <p class="card-text">Release Date: @album.ReleaseDate</p>
                         <p class="card-text">Type: @album.AlbumType</p>
                         <p class="card-text">Description: @album.Description</p>
                         <p class="card-text">Tracks:</p>
