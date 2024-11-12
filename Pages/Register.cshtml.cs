@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Models.DataAccess;
+using Models.Services;
+using System.Diagnostics;
 using System.Text;
 
 public class RegisterModel : PageModel
@@ -9,10 +11,15 @@ public class RegisterModel : PageModel
     public User User { get; set; } = new User();
 
     private readonly UserRepository _userRepository;
+    private readonly UserCredentialsService _userCredentialsService;
 
-    public RegisterModel(UserRepository userRepository)
+    private string fixedSalt { get; set; }
+
+    public RegisterModel()
     {
-        _userRepository = userRepository;
+        _userRepository = new UserRepository();
+        _userCredentialsService = new UserCredentialsService();
+        fixedSalt = _userCredentialsService.GetFixedSalt();
     }
 
     public void OnGet()
@@ -27,11 +34,13 @@ public class RegisterModel : PageModel
         }
 
         // Checking if email already exists 
-        if (_userRepository.EmailExists(User.Email)) 
-         {
-             ModelState.AddModelError("User.Email", "Email already exists.");
-             return Page();
-         }
+        
+        //if (_userRepository.EmailExists(User.Email)) 
+         //{
+          //   ModelState.AddModelError("User.Email", "Email already exists.");
+           //  return Page();
+         //}
+
 
         // Validate password
         if (!IsValidPassword(User.Password))
@@ -40,12 +49,26 @@ public class RegisterModel : PageModel
             return Page();
         }
 
-         byte[] passHash = HashPassword(User.Password);
+        try
+        {
+            string emailHash = BCrypt.Net.BCrypt.HashPassword(User.Email, fixedSalt);
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(User.Password, fixedSalt);
 
-        _userRepository.AddUser(User.FirstName, User.Email);
-        _userRepository.AddUserCredentials(User.Email, passHash);
+            byte[] emailHashBytes = System.Text.Encoding.UTF8.GetBytes(emailHash);
+            byte[] passwordHashBytes = System.Text.Encoding.UTF8.GetBytes(passwordHash);
 
-        return RedirectToPage("/Login"); // we can chage to which page we want to redirect
+            _userRepository.AddUser(User.FirstName, User.Email);
+            _userCredentialsService.AddUserCredentials(emailHashBytes, passwordHashBytes);
+
+            return RedirectToPage("/Login"); // we can chage to which page we want to redirect
+        }
+        catch(Exception e)
+        {
+            Debug.WriteLine(e.Message);
+            
+        }
+        return Page();
+
     }
 
     private bool IsValidPassword(string password)

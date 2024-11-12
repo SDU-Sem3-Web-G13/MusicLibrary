@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Models.DataAccess;
+using Models.Services;
 
 public class LoginModel : PageModel
 {
@@ -14,10 +15,14 @@ public class LoginModel : PageModel
     public string Password { get; set; }
 
     private readonly UserRepository _userRepository;
+    private readonly UserCredentialsService userCredentialsService;
+    private readonly string fixedSalt;
 
-    public LoginModel(UserRepository userRepository)
+    public LoginModel()
     {
-        _userRepository = userRepository;
+        _userRepository = new UserRepository();
+        userCredentialsService = new UserCredentialsService();
+        fixedSalt = userCredentialsService.GetFixedSalt();
     }
 
     public void OnGet()
@@ -32,6 +37,21 @@ public class LoginModel : PageModel
             ErrorMessage = "Email and password are required.";
             return Page();
         }
+
+        string emailHash = BCrypt.Net.BCrypt.HashPassword(Email, fixedSalt);
+        string hashedEmailHex = userCredentialsService.ConvertToHex(emailHash);
+        string passwordHash = BCrypt.Net.BCrypt.HashPassword(Password, fixedSalt);
+        string hashedPasswordHex = userCredentialsService.ConvertToHex(passwordHash);
+
+        if (userCredentialsService.ValidateCredentials(hashedEmailHex, hashedPasswordHex))
+        {
+            return RedirectToPage("/Index");
+        }
+        else
+        {
+            ErrorMessage = "Invalid email or password.";
+        }
+
         return Page(); // direct to album page
     }
 

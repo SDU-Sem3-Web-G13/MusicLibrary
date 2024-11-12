@@ -40,12 +40,9 @@
     
     <button type="submit" class="btn btn-primary">Register</button>
 
-    @if (Model.ErrorMessage?.Length > 0) 
-    {
-        <div class="alert alert-danger mt-2">@Model.ErrorMessage</div>
-    }
+    
 </form>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} // Include validation scripts
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} 
 }
