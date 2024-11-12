@@ -27,13 +27,6 @@ a {
   color: #0077cc;
 }
 
-.btn-primary {
-  color: #ffffff;
-  color: var(--primary-color);
-  color: var(--secondary-color)
-}
-
-
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
   background-color: #1b6ec2;
@@ -59,7 +52,6 @@ button.accept-policy {
 html {
   scroll-behavior: smooth;
 }
-
 
 header {
   padding: 24px 0px;
