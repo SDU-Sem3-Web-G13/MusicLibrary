@@ -4,6 +4,8 @@ namespace Models
 {
     public class AlbumModel
     {
+        public int? Id { get; set; }
+        public int? OwnerId { get; set; }
         public string AlbumName { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public string Artist { get; set; }

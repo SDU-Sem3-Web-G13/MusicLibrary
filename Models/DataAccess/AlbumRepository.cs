@@ -45,6 +45,7 @@ namespace Models.DataAccess
                     while (reader.Read())
                     {
                         AlbumModel album = new AlbumModel(
+                            
                             reader.GetString(3),
                             reader.GetDateTime(4),
                             reader.GetString(5),
@@ -52,6 +53,8 @@ namespace Models.DataAccess
                             reader.GetString(7),
                             reader.GetFieldValue<string[]>(8)
                         );
+                        album.Id = reader.GetInt32(0);
+                        album.OwnerId = reader.GetInt32(1);
                         albums.Add(album);
                     }
                 }
