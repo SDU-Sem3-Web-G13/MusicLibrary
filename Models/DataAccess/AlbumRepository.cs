@@ -46,11 +46,11 @@ namespace Models.DataAccess
                     {
                         AlbumModel album = new AlbumModel(
                             reader.GetString(3),
-                            reader.GetDateTime(5),
+                            reader.GetDateTime(4),
+                            reader.GetString(5),
                             reader.GetString(6),
                             reader.GetString(7),
-                            reader.GetString(8),
-                            reader.GetString(9).Split(", ")
+                            reader.GetFieldValue<string[]>(8)
                         );
                         albums.Add(album);
                     }
