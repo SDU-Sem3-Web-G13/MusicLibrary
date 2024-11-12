@@ -21,5 +21,10 @@ namespace RazorMusic.Pages
                 Albums.Add(album);
             }
         }
+
+        public void DeleteAlbum(int albumId) {
+            albumRepository.DeleteAlbum(albumId);
+            GetUserAlbums();
+        }
     }
 }

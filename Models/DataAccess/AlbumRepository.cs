@@ -18,10 +18,8 @@ namespace Models.DataAccess
             dbAccess.ExecuteNonQuery(sql, ("@owner", owner), ("@cover", cover), ("@albumName", albumName), ("@releaseDate", releaseDate), ("@artist", artist), ("@type", type), ("@description", description), ("@tracks", tracks));
         }
 
-        public void DeleteAlbum(string albumName)
+        public void DeleteAlbum(int id)
         {
-            string idSql = $"SELECT a_id FROM albums WHERE a_name = @name";
-            int id = dbAccess.GetId(idSql, "@name", albumName);
             string sql = "DELETE FROM albums WHERE a_id = @id";
             dbAccess.ExecuteNonQuery(sql, ("@id", id));
         }
