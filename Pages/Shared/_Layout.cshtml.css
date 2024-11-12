@@ -1,6 +1,22 @@
 ﻿/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+:root {
+  --bg-color-light: #f8f9fa;
+  --bg-color-dark: #343a40;
+  --text-color-light: #212529;
+  --text-color-dark: #ffffff;
+  --shadow-color-light: rgba(0, 0, 0, 0.1);
+  --shadow-color-dark: rgba(255, 255, 255, 0.1);
+  --primary-color: #b700ff;
+  --primary-color-hover: #e100ff;
+  --primary-color-active: #8800ff;
+  --secondary-color: #afb2b5;
+  --secondary-color-hover: #494949;
+  --secondary-color-active: #292e33;
+}
+
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
@@ -12,10 +28,11 @@ a {
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1b6ec2;
-  border-color: #1861ac;
+  color: #ffffff;
+  color: var(--primary-color);
+  color: var(--secondary-color)
 }
+
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
   color: #fff;
@@ -39,10 +56,73 @@ button.accept-policy {
   line-height: inherit;
 }
 
-.footer {
+html {
+  scroll-behavior: smooth;
+}
+
+
+header {
+  padding: 24px 0px;
+  max-height: 70px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 0px 4px rgb(0, 0, 0, 0.1);
+
+  width: 100%;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+header .razor-logo {
+  margin-left: 10vw;
+}
+
+header .razor-logo img {
+  max-width: 50px;
+  max-height: 50px;
+  border-radius: 75%;
+}
+
+.nav-horizontal {
+  display: flex;
+  flex-direction: row;
+}
+
+button {
+  text-decoration: none;
+  cursor: pointer;
+  padding: 10px 18px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  background-color: var(--primary-color);
+  color: var(--text-color-dark);
+}
+
+footer {
+  
   position: absolute;
   bottom: 0;
+
+  padding: 24px 0px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0px 0px 4px rgb(0, 0, 0, 0.1);
+
   width: 100%;
-  white-space: nowrap;
-  line-height: 60px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+  max-height: 70px;
+}
+
+.container{
+  width: 100%;
+  margin: auto;
 }
