@@ -17,14 +17,16 @@ namespace RazorMusic.Pages
         }
 
         private void GetUserAlbums() {
+            Albums.Clear();
             foreach(var album in albumRepository.GetAlbums()) {
                 Albums.Add(album);
             }
         }
 
-        public void DeleteAlbum(int albumId) {
+        public IActionResult OnGetDeleteAlbum(int albumId) {
             albumRepository.DeleteAlbum(albumId);
             GetUserAlbums();
+            return new JsonResult(new { success = true });
         }
     }
 }
