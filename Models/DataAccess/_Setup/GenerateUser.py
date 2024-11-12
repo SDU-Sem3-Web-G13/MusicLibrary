@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import bcrypt
 import os
+import base64
 
 def main():
     load_dotenv()

@@ -10,7 +10,7 @@ public class UserCredentialsService
     private readonly UserRepository userRepository = new UserRepository();
     public UserCredentialsService()
     {
-        string envPath = Path.Combine(AppContext.BaseDirectory, ".env");
+        string envPath = "./Models/DataAccess/_Setup/.env";
         Env.Load(envPath);
 
         string base64Salt = Env.GetString("BCRYPT_SALT");

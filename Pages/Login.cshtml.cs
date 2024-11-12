@@ -32,15 +32,15 @@ public class LoginModel : PageModel
 
     public IActionResult OnPost()
     {
-        if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
+        if (string.IsNullOrEmpty(User.Email) || string.IsNullOrEmpty(User.Password))
         {
             ErrorMessage = "Email and password are required.";
             return Page();
         }
 
-        string emailHash = BCrypt.Net.BCrypt.HashPassword(Email, fixedSalt);
+        string emailHash = BCrypt.Net.BCrypt.HashPassword(User.Email, fixedSalt);
         string hashedEmailHex = userCredentialsService.ConvertToHex(emailHash);
-        string passwordHash = BCrypt.Net.BCrypt.HashPassword(Password, fixedSalt);
+        string passwordHash = BCrypt.Net.BCrypt.HashPassword(User.Password, fixedSalt);
         string hashedPasswordHex = userCredentialsService.ConvertToHex(passwordHash);
 
         if (userCredentialsService.ValidateCredentials(hashedEmailHex, hashedPasswordHex))
