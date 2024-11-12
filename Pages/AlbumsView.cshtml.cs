@@ -28,5 +28,15 @@ namespace RazorMusic.Pages
             GetUserAlbums();
             return new JsonResult(new { success = true });
         }
+
+        public IActionResult OnGetAddAlbum(string albumName, DateTime releaseDate, string artist, string albumType, string description, string[] tracks) {
+            albumRepository.AddAlbum(1, new byte[1], albumName, releaseDate, artist, albumType, description, tracks);
+            GetUserAlbums();
+            return new JsonResult(new { success = true });
+        }
+
+        public IActionResult OnGetEditAlbum(int albumId, string albumName, DateTime releaseDate, string artist, string albumType, string description, string[] tracks) {
+            return new JsonResult(new { success = true });
+        }
     }
 }

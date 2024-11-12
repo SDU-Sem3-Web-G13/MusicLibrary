@@ -4,6 +4,29 @@
 @using System
 @{
 }
+
+<style>
+.track-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.track-input {
+    flex: 1;
+    margin-right: 10px;
+    min-width: 0; 
+}
+
+.delete-track-button {
+    flex-shrink: 0;
+}
+
+.album-input {
+    margin-bottom: 10px;
+}
+</style>
+
 <div class="container">
     <h1>Your Albums</h1>
     <br />
@@ -27,12 +50,16 @@
                                 <li>@track</li>
                             }
                         </ul>
-                        <button class="btn btn-danger" onclick="event.stopPropagation(); showModal('@album.Id')">Delete</button>
+                        <button class="btn btn-danger" onclick="event.stopPropagation(); showDeleteModal('@album.Id')"><i class="fas fa-trash-alt"></i></button>
                     </div>
                 </div>
             </div>
         }
     </div>
+
+    <button type="button" class="btn btn-primary" style="position: fixed; bottom: 100px; right: 50px;" onclick="event.stopPropagation(); showCreateModal()">
+        Add Album
+    </button>
 </div>
 
 <!-- Delete Album Modal -->
@@ -53,6 +80,63 @@
     </div>
 </div>
 
+<!-- Create Album Modal -->
+<div class="modal" id="createModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create Album</h5>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="form-group">
+                        
+                        <div class="album-input">
+                            <label for="albumName">Album Name</label>
+                            <input type="text" class="form-control" id="albumName" name="albumName" required />
+                        </div>
+                        <div class="album-input">
+                            <label for="albumReleaseDate">Release Date</label>
+                            <input type="date" class="form-control" id="albumReleaseDate" name="albumReleaseDate" />
+                        </div>
+
+                        <div class="album-input">
+                            <label for="albumArtist">Artist</label>
+                            <input type="text" class="form-control" id="albumArtist" name="albumArtist" />
+                        </div>
+
+                        <div class="album-input">
+                            <label for="albumType">Type</label>
+                            <select class="form-control" id="albumType" name="albumType" >
+                                <option value="Single">Single</option>
+                                <option value="EP">EP</option>
+                                <option value="LP">LP</option>
+                            </select>
+                        </div>
+
+                        <div class="album-input">
+                            <label for="albumDescription">Description</label>
+                            <textarea class="form-control" id="albumDescription" name="albumDescription" ></textarea>
+                        </div>
+
+                        <div class="album-input">
+                            <label for="albumTracks">Tracks</label>
+                            <div id="tracksContainer">
+
+                            </div>
+                            <button type="button" class="btn btn-secondary" id="addTrackButton" onclick="addNewTrackInput()">Add Track</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelCreateButton">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmCreateButton">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     function toggleDetails(id) {
         var element = document.getElementById(id);
@@ -63,7 +147,7 @@
         }
     }
 
-    function showModal(albumId) {
+    function showDeleteModal(albumId) {
         var modal = document.getElementById('deleteModal');
         var confirmButton = document.getElementById('confirmDeleteButton');
         var cancelButton = document.getElementById('cancelDeleteButton');
@@ -71,15 +155,35 @@
             deleteAlbum(albumId);
         };
         cancelButton.onclick = function() {
-            hideModal();
+            $(modal).modal('hide');
         };
 
         $(modal).modal('show');
     }
 
-    function hideModal() {
-        var modal = document.getElementById('deleteModal');
-        $(modal).modal('hide');
+    function showCreateModal() {
+        var modal = document.getElementById('createModal');
+        var confirmButton = document.getElementById('confirmCreateButton');
+        var cancelButton = document.getElementById('cancelCreateButton');
+        var inputFields = modal.querySelectorAll('input, textarea'); 
+        var tracksContainer = document.getElementById('tracksContainer'); 
+
+        confirmButton.onclick = function() {
+            createAlbum();
+        };
+        cancelButton.onclick = function() {
+            inputFields.forEach(function(input) {
+                input.value = '';
+            });
+
+            while (tracksContainer.firstChild) {
+                tracksContainer.removeChild(tracksContainer.firstChild);
+            }
+
+            $(modal).modal('hide');
+        };
+
+        $(modal).modal('show');
     }
 
     function deleteAlbum(albumId) {
@@ -91,4 +195,49 @@
             }
         });
     }
+
+    function createAlbum() {
+        var albumName = document.getElementById('albumName').value;
+        var albumReleaseDate = document.getElementById('albumReleaseDate').value;
+        var albumArtist = document.getElementById('albumArtist').value;
+        var albumType = document.getElementById('albumType').value;
+        var albumDescription = document.getElementById('albumDescription').value;
+        var albumTracks = Array.from(document.getElementsByName('albumTracks[]')).map(input => input.value);
+
+        var tracksParam = albumTracks.map(track => `tracks=${encodeURIComponent(track)}`).join('&');
+
+        debugger;
+        fetch(`?handler=AddAlbum&albumName=${encodeURIComponent(albumName)}&releaseDate=${encodeURIComponent(albumReleaseDate)}&artist=${encodeURIComponent(albumArtist)}&albumType=${encodeURIComponent(albumType)}&description=${encodeURIComponent(albumDescription)}&${tracksParam}`).then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Failed to create album.');
+            }
+        });
+    }
+
+    function addNewTrackInput() {
+        var newTrackInput = document.createElement('div');
+        newTrackInput.className = 'track-item'; 
+
+        var inputField = document.createElement('input');
+        inputField.type = 'text';
+        inputField.name = 'trackName';
+        inputField.className = 'form-control track-input';
+        inputField.placeholder = 'Track Name';
+        newTrackInput.appendChild(inputField);
+
+        var deleteButton = document.createElement('button');
+        deleteButton.innerHTML = 'Delete';
+        deleteButton.className = 'btn btn-danger btn-sm delete-track-button'; 
+        deleteButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+        deleteButton.onclick = function() {
+            newTrackInput.remove();
+        };
+        newTrackInput.appendChild(deleteButton);
+
+        document.getElementById('tracksContainer').appendChild(newTrackInput);
+    }
+
+    
 </script>
