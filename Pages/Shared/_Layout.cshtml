@@ -9,29 +9,25 @@
     <link rel="stylesheet" href="~/RazorMusic.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">RazorMusic</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/IndexDefaultUser">WelcomePage</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+    <header class="containter">
+        <div class="razor-logo">
+            <a href="Index">
+                <img src="razor-logo.png" alt="RazorMusic Logo">
+            </a>
+        </div>
+            <nav class="nav-horizontal">
+                <a class="nav-link text-dark" asp-area="" asp-page="/About">About</a>
+                <a class="nav-link text-dark" asp-area="" asp-page="/FAQ">FAQ</a>
+                <a class="nav-link text-dark" asp-area="" asp-page="/Contact">Contact</a>
+            </nav>  
+        <div class="nav-horizontal">
+            <a class="nav-link text-dark" asp-area="" asp-page="/LoginFrom">
+                <button class="animated-btn">Sign In</button>
+            </a>
+            <a class="nav-link text-dark" asp-area="" asp-page="/RegisterForm">
+                <button class="animated-btn">Sign Up</button>
+            </a>
+        </div>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -39,9 +35,13 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - RazorMusic - <a asp-area="" asp-page="/Privacy">Privacy</a>
+    <footer>
+        <div>
+            &copy; 2024 - RazorMusic
+        </div>
+        <div class="nav-horizontal">                
+            <a class="nav-link text-dark" asp-area="" asp-page="/PrivacyPolicy">Privacy Policy</a>
+            <a class="nav-link text-dark" asp-area="" asp-page="/TermsOfUse">Terms Of Use</a>
         </div>
     </footer>
 
