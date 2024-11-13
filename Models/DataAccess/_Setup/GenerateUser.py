@@ -1,4 +1,5 @@
 from dotenv import load_dotenv
+import base64
 import bcrypt
 import os
 import base64
@@ -8,7 +9,6 @@ def main():
     UMAIL = os.getenv("PGADMIN_DEFAULT_EMAIL")
     UPASS = os.getenv("PGADMIN_DEFAULT_PASSWORD")
     
-    # Define a fixed salt. (random salt for now)
     base64salt = os.getenv("BCRYPT_SALT")
     fixed_salt = base64.b64decode(base64salt)
     
