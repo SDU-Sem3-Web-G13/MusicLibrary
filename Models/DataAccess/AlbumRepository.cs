@@ -60,5 +60,30 @@ namespace Models.DataAccess
 
             return albums;
         }
+
+        public AlbumModel GetSingleAlbum(int albumId) {
+            string query = $"SELECT * FROM albums WHERE a_id = {albumId}";
+            using (var cmd = dbAccess.dbDataSource.CreateCommand(query))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        AlbumModel album = new AlbumModel(
+                            reader.GetString(3),
+                            reader.GetDateTime(4),
+                            reader.GetString(5),
+                            reader.GetString(6),
+                            reader.GetString(7),
+                            reader.GetFieldValue<string[]>(8)
+                        );
+                        album.Id = reader.GetInt32(0);
+                        album.OwnerId = reader.GetInt32(1);
+                        return album;
+                    }
+                }
+            }
+            throw new Exception("Album not found");
+        }
     }
 }

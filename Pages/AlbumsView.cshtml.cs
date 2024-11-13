@@ -23,6 +23,12 @@ namespace RazorMusic.Pages
             }
         }
 
+        public IActionResult OnGetGetAlbum(int albumId) {
+            var album = albumRepository.GetSingleAlbum(albumId);
+            return new JsonResult(new { success = true, album });
+        }
+
+
         public IActionResult OnGetDeleteAlbum(int albumId) {
             albumRepository.DeleteAlbum(albumId);
             GetUserAlbums();
@@ -36,6 +42,7 @@ namespace RazorMusic.Pages
         }
 
         public IActionResult OnGetEditAlbum(int albumId, string albumName, DateTime releaseDate, string artist, string albumType, string description, string[] tracks) {
+            albumRepository.ModifyAlbum(albumId, 1, new byte[1], albumName, releaseDate, artist, albumType, description, tracks);
             return new JsonResult(new { success = true });
         }
     }

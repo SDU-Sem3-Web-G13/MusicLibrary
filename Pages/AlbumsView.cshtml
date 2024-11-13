@@ -50,7 +50,12 @@
                                 <li>@track</li>
                             }
                         </ul>
-                        <button class="btn btn-danger" onclick="event.stopPropagation(); showDeleteModal('@album.Id')"><i class="fas fa-trash-alt"></i></button>
+                        <button class="btn btn-danger" onclick="event.stopPropagation(); showDeleteModal('@album.Id')">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="event.stopPropagation(); showEditModal('@album.Id')">
+                            <i class="fas fa-edit"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -85,7 +90,7 @@
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: auto;">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Create Album</h5>
+                <h5 class="modal-title" id="createModalTitle">Create Album</h5>
             </div>
             <div class="modal-body">
                 <form method="post">
@@ -137,6 +142,7 @@
     </div>
 </div>
 
+
 <script>
     function toggleDetails(id) {
         var element = document.getElementById(id);
@@ -168,18 +174,12 @@
         var inputFields = modal.querySelectorAll('input, textarea'); 
         var tracksContainer = document.getElementById('tracksContainer'); 
 
+        clearCreateModal(inputFields, tracksContainer);
+
         confirmButton.onclick = function() {
             createAlbum();
         };
         cancelButton.onclick = function() {
-            inputFields.forEach(function(input) {
-                input.value = '';
-            });
-
-            while (tracksContainer.firstChild) {
-                tracksContainer.removeChild(tracksContainer.firstChild);
-            }
-
             $(modal).modal('hide');
         };
 
@@ -194,6 +194,96 @@
                 alert('Failed to delete album.');
             }
         });
+    }
+
+    function showEditModal(albumId) {
+        var modal = document.getElementById('createModal');
+        var modalTitle = document.getElementById('createModalTitle');
+        var confirmButton = document.getElementById('confirmCreateButton');
+        var cancelButton = document.getElementById('cancelCreateButton');
+        var inputFields = modal.querySelectorAll('input, textarea'); 
+        var albumTypeSelect = modal.querySelector('select#albumType');
+        var tracksContainer = document.getElementById('tracksContainer');
+
+        clearCreateModal(inputFields, tracksContainer); 
+        var album = getAlbum(albumId);
+        
+
+        confirmButton.onclick = function() {
+            editAlbum(albumId);
+        };
+        cancelButton.onclick = function() {
+            $(modal).modal('hide');
+        };
+
+        modalTitle.innerHTML = 'Edit Album';
+        confirmButton.innerHTML = 'Save';
+
+        inputFields.forEach(function(input) {
+            switch (input.id) {
+                case 'albumName':
+                    input.value = album.albumName;
+                    break;
+                case 'albumReleaseDate':
+                    var releaseDate = new Date(album.releaseDate);
+                    var formattedDate = releaseDate.getFullYear() + '-' + 
+                                        ('0' + (releaseDate.getMonth() + 1)).slice(-2) + '-' + 
+                                        ('0' + releaseDate.getDate()).slice(-2);
+                    input.value = formattedDate;
+                    break;
+                case 'albumArtist':
+                    input.value = album.artist;
+                    break;
+                case 'albumDescription':
+                    input.value = album.description;
+                    break;
+            }
+        });
+
+        Array.from(albumTypeSelect.options).forEach(function(option) {
+            if (option.value === album.albumType) {
+                option.selected = true;
+            }
+        });
+
+        album.tracks.forEach(function(track) {
+            addNewTrackInput(track);
+        });
+
+
+        $(modal).modal('show');
+    }
+
+
+    function clearCreateModal(inputFields, tracksContainer) {
+        inputFields.forEach(function(input) {
+            input.value = '';
+        });
+
+        while (tracksContainer.firstChild) {
+            tracksContainer.removeChild(tracksContainer.firstChild);
+        }
+    }
+
+    function getAlbum(albumId) {
+        $.ajax({
+            url: '/AlbumsView?handler=GetAlbum',
+            type: 'GET',
+            data: { albumId: albumId },
+            async: false,
+            success: function(response) {
+                if (response.success) {
+                    album = response.album;
+                } else {
+                    console.error('Failed to retrieve album');
+                }
+            },
+            error: function() {
+                console.error('Error in AJAX request');
+            }
+        });
+
+        return album;
     }
 
     function createAlbum() {
@@ -216,15 +306,35 @@
         });
     }
 
-    function addNewTrackInput() {
+    function editAlbum(albumId) {
+        var albumName = document.getElementById('albumName').value;
+        var albumReleaseDate = document.getElementById('albumReleaseDate').value;
+        var albumArtist = document.getElementById('albumArtist').value;
+        var albumType = document.getElementById('albumType').value;
+        var albumDescription = document.getElementById('albumDescription').value;
+        var albumTracks = Array.from(document.getElementsByName('albumTracks[]')).map(input => input.value);
+
+        var tracksParam = albumTracks.map(track => `tracks=${encodeURIComponent(track)}`).join('&');
+
+        fetch(`?handler=EditAlbum&albumId=${albumId}&albumName=${encodeURIComponent(albumName)}&releaseDate=${encodeURIComponent(albumReleaseDate)}&artist=${encodeURIComponent(albumArtist)}&albumType=${encodeURIComponent(albumType)}&description=${encodeURIComponent(albumDescription)}&${tracksParam}`).then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Failed to edit album.');
+            }
+        });
+    }
+
+    function addNewTrackInput(trackName = '') {
         var newTrackInput = document.createElement('div');
         newTrackInput.className = 'track-item'; 
 
         var inputField = document.createElement('input');
         inputField.type = 'text';
-        inputField.name = 'trackName';
+        inputField.name = 'albumTracks[]';
         inputField.className = 'form-control track-input';
         inputField.placeholder = 'Track Name';
+        inputField.value = trackName;
         newTrackInput.appendChild(inputField);
 
         var deleteButton = document.createElement('button');
