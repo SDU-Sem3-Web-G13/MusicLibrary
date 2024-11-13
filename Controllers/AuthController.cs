@@ -9,6 +9,11 @@ public class AuthController : Controller
 {
     internal UserRepository userRepository;
 
+    public AuthController()
+    {
+        userRepository = new UserRepository();
+    }
+
 
     [HttpPost("login")]
     public IActionResult Login(string email, string password)

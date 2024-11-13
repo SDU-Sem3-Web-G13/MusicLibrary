@@ -1,18 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Models;
+using Models.DataAccess;
 
 namespace RazorMusic.Pages
 {
     public class AlbumsViewModel : PageModel
     {
         [BindProperty(SupportsGet = true)]
-        public List<AlbumModel> Albums { get; set; } = new List<AlbumModel>();
+        public List<AlbumModel> Albums { get; set; }
+        private AlbumRepository albumRepository { get; set; }
+
+        public AlbumsViewModel()
+        {
+            albumRepository = new AlbumRepository();
+            Albums = albumRepository.GetAlbums();
+        }
         public void OnGet()
         {
-            GetUserAlbums();
+            
         }
 
+
+        /*
         private void GetUserAlbums() {
             Albums.Add(new AlbumModel(
                 "The Dark Side of the Moon",
@@ -84,7 +94,7 @@ namespace RazorMusic.Pages
                     "Nobody Home",
                     "Vera"
                 }
-            ));
-        }
+            )); */
     }
 }
+

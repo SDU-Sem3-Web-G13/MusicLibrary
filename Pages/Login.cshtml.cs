@@ -8,11 +8,12 @@ public class LoginModel : PageModel
     [BindProperty]
     public User User { get; set; } = new User(); 
 
-    public string ErrorMessage { get; set; }
+    public string ErrorMessage { get; set; } = string.Empty;
+
     [BindProperty]
-    public string Email { get; set; }
+    public string? Email { get; set; }
     [BindProperty]
-    public string Password { get; set; }
+    public string? Password { get; set; }
 
     private readonly UserRepository _userRepository;
     private readonly UserCredentialsService userCredentialsService;

@@ -129,6 +129,33 @@ namespace Models.DataAccess
             }
             return null;
         }
+
+        public bool EmailExists(string email)
+        {
+            string sql = "SELECT umail FROM users";
+            List<string> emails = new List<string>();
+
+            using (var cmd = dbAccess.dbDataSource.CreateCommand(sql))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string user = reader.GetString(0);
+
+
+                        emails.Add(user);
+                    }
+                }
+            }
+            if (emails.Contains(email))
+            {
+                return true;
+            }
+            return false;
+        }
+
+
         #endregion
 
 

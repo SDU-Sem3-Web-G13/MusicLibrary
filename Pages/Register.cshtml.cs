@@ -13,13 +13,13 @@ public class RegisterModel : PageModel
     private readonly UserRepository _userRepository;
     private readonly UserCredentialsService _userCredentialsService;
 
-    private string fixedSalt { get; set; }
+    private readonly string FixedSalt;
 
     public RegisterModel()
     {
         _userRepository = new UserRepository();
         _userCredentialsService = new UserCredentialsService();
-        fixedSalt = _userCredentialsService.GetFixedSalt();
+        FixedSalt = _userCredentialsService.GetFixedSalt();
     }
 
     public void OnGet()
@@ -35,11 +35,11 @@ public class RegisterModel : PageModel
 
         // Checking if email already exists 
         
-        //if (_userRepository.EmailExists(User.Email)) 
-         //{
-          //   ModelState.AddModelError("User.Email", "Email already exists.");
-           //  return Page();
-         //}
+        if (_userRepository.EmailExists(User.Email)) 
+         {
+             ModelState.AddModelError("User.Email", "Email already exists.");
+             return Page();
+         }
 
 
         // Validate password
@@ -51,8 +51,8 @@ public class RegisterModel : PageModel
 
         try
         {
-            string emailHash = BCrypt.Net.BCrypt.HashPassword(User.Email, fixedSalt);
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(User.Password, fixedSalt);
+            string emailHash = BCrypt.Net.BCrypt.HashPassword(User.Email, FixedSalt);
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(User.Password, FixedSalt);
 
             byte[] emailHashBytes = System.Text.Encoding.UTF8.GetBytes(emailHash);
             byte[] passwordHashBytes = System.Text.Encoding.UTF8.GetBytes(passwordHash);
