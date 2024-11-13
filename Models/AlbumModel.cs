@@ -4,6 +4,9 @@ namespace Models
 {
     public class AlbumModel
     {
+        public int? Id { get; set; }
+        public int? OwnerId { get; set; }
+        public byte[]? CoverImage { get; set; }
         public string AlbumName { get; set; }
         public DateTime? ReleaseDate { get; set; }
         public string Artist { get; set; }
@@ -25,6 +28,11 @@ namespace Models
             this.AlbumType = albumType;
             this.Description = description;
             this.Tracks = tracks;
+        }
+
+        public string GetCoverImageBase64()
+        {
+            return Convert.ToBase64String(CoverImage ?? new byte[1]);
         }
     }
 }
