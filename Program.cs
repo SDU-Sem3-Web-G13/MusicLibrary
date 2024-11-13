@@ -1,7 +1,11 @@
+using Microsoft.AspNetCore.Mvc;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddMvc().AddRazorPagesOptions(o =>
+            o.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()));
 
 var app = builder.Build();
 

@@ -24,10 +24,11 @@ namespace Models.DataAccess
             dbAccess.ExecuteNonQuery(sql, ("@id", id));
         }
 
-        public void ModifyAlbum(int id, int owner, byte[] cover, string albumName, DateTime releaseDate, string artist, string type, string description, string[] tracks)
+        public void ModifyAlbum(int id, int owner, byte[]? cover, string albumName, DateTime releaseDate, string artist, string type, string description, string[] tracks)
         {
-            string sql = "UPDATE albums SET a_owner = @owner, a_cover = @cover, a_name = @albumName, a_releaseDate = @releaseDate, a_artist = @artist, a_type = @type, a_desc = @description, a_tracks = @tracks WHERE a_id = @id";
-            dbAccess.ExecuteNonQuery(sql, ("@id", id), ("@owner", owner), ("@cover", cover), ("@albumName", albumName), ("@releaseDate", releaseDate), ("@artist", artist), ("@type", type), ("@description", description), ("@tracks", tracks));
+            string sql = $"UPDATE albums SET a_owner = @owner,{(cover != null ?  " a_cover = @cover," : "")} a_name = @albumName, a_releaseDate = @releaseDate, a_artist = @artist, a_type = @type, a_desc = @description, a_tracks = @tracks WHERE a_id = @id";
+            if(cover != null) dbAccess.ExecuteNonQuery(sql, ("@id", id), ("@owner", owner), ("@cover", cover), ("@albumName", albumName), ("@releaseDate", releaseDate), ("@artist", artist), ("@type", type), ("@description", description), ("@tracks", tracks));
+            else dbAccess.ExecuteNonQuery(sql, ("@id", id), ("@owner", owner), ("@albumName", albumName), ("@releaseDate", releaseDate), ("@artist", artist), ("@type", type), ("@description", description), ("@tracks", tracks));
         }
 
         public List<AlbumModel> GetAlbums()
@@ -52,6 +53,7 @@ namespace Models.DataAccess
                             reader.GetFieldValue<string[]>(8)
                         );
                         album.Id = reader.GetInt32(0);
+                        album.CoverImage = reader.GetFieldValue<byte[]>(2);
                         album.OwnerId = reader.GetInt32(1);
                         albums.Add(album);
                     }
@@ -78,6 +80,7 @@ namespace Models.DataAccess
                             reader.GetFieldValue<string[]>(8)
                         );
                         album.Id = reader.GetInt32(0);
+                        album.CoverImage = reader.GetFieldValue<byte[]>(2);
                         album.OwnerId = reader.GetInt32(1);
                         return album;
                     }

@@ -23,6 +23,7 @@
 }
 
 .album-input {
+    using System.Reflection.Metadata;
     margin-bottom: 10px;
 }
 </style>
@@ -36,8 +37,9 @@
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm rounded" onclick="toggleDetails('details-@album.AlbumName.Replace(" ", "-")')" style="cursor: pointer;">
                     <div class="card-body">
-                        <h5 class="card-title">@album.AlbumName</h5>
-                        <p class="card-text">Artist: @album.Artist</p>
+                        <img src="data:image/jpeg;base64,@album.GetCoverImageBase64()" class="card-img-top" alt="@album.AlbumName" style="width: 100%; height: auto; margin-bottom: 10px;" />
+                        <strong><h4 class="card-title">@album.AlbumName</h4></strong>
+                        <p class="card-text" style="color: gray; margin-top: -10px;">by @album.Artist</p>
                     </div>
                     <div id="details-@album.AlbumName.Replace(" ", "-")" class="card-body" style="display: none;">
                         <p class="card-text">Release Date: @album.ReleaseDate</p>
@@ -93,7 +95,7 @@
                 <h5 class="modal-title" id="createModalTitle">Create Album</h5>
             </div>
             <div class="modal-body">
-                <form method="post">
+                <form method="post" enctype="multipart/form-data" id="createAlbumForm">
                     <div class="form-group">
                         
                         <div class="album-input">
@@ -131,12 +133,20 @@
                             </div>
                             <button type="button" class="btn btn-secondary" id="addTrackButton" onclick="addNewTrackInput()">Add Track</button>
                         </div>
+
+                        <div class="album-input">
+                            <label for="albumCoverImage">Cover Image</label>
+                            <input type="file" class="form-control" id="albumCoverImage" name="albumCoverImage" accept="image/png, image/jpeg"  onchange="displayImage(this)" />
+                            <small id="fileSizeLimit" class="form-text text-muted">Maximum file size: 4mb</small>
+                        </div>
+
+                        <img id="coverImagePreview" src="#" alt="Cover Image" style="display: none; width: 100%; height: auto;" />
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="cancelCreateButton">Cancel</button>
-                <button type="button" class="btn btn-primary" id="confirmCreateButton">Create</button>
+                <button type="submit" class="btn btn-primary" id="confirmCreateButton">Create</button>
             </div>
         </div>
     </div>
@@ -150,6 +160,20 @@
             element.style.display = "block";
         } else {
             element.style.display = "none";
+        }
+    }
+
+    function displayImage(input) {
+        img = document.getElementById('coverImagePreview');
+        img.src = '#';
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = document.getElementById('coverImagePreview');
+                img.src = e.target.result;
+                img.style.display = 'block';
+            }
+            reader.readAsDataURL(input.files[0]);
         }
     }
 
@@ -176,24 +200,15 @@
 
         clearCreateModal(inputFields, tracksContainer);
 
-        confirmButton.onclick = function() {
+        confirmButton.addEventListener('click', function(event) {
+            event.preventDefault();
             createAlbum();
-        };
+        });
         cancelButton.onclick = function() {
             $(modal).modal('hide');
         };
 
         $(modal).modal('show');
-    }
-
-    function deleteAlbum(albumId) {
-        fetch(`?handler=DeleteAlbum&albumId=${albumId}`).then(response => {
-            if (response.ok) {
-                location.reload();
-            } else {
-                alert('Failed to delete album.');
-            }
-        });
     }
 
     function showEditModal(albumId) {
@@ -204,6 +219,7 @@
         var inputFields = modal.querySelectorAll('input, textarea'); 
         var albumTypeSelect = modal.querySelector('select#albumType');
         var tracksContainer = document.getElementById('tracksContainer');
+        var img = document.getElementById('coverImagePreview');
 
         clearCreateModal(inputFields, tracksContainer); 
         var album = getAlbum(albumId);
@@ -218,6 +234,9 @@
 
         modalTitle.innerHTML = 'Edit Album';
         confirmButton.innerHTML = 'Save';
+
+        img.src = `data:image/png;base64,${album.coverImage}`; 
+        img.style.display = 'block';
 
         inputFields.forEach(function(input) {
             switch (input.id) {
@@ -254,7 +273,6 @@
         $(modal).modal('show');
     }
 
-
     function clearCreateModal(inputFields, tracksContainer) {
         inputFields.forEach(function(input) {
             input.value = '';
@@ -263,6 +281,16 @@
         while (tracksContainer.firstChild) {
             tracksContainer.removeChild(tracksContainer.firstChild);
         }
+    }
+
+    function deleteAlbum(albumId) {
+        fetch(`?handler=DeleteAlbum&albumId=${albumId}`).then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Failed to delete album.');
+            }
+        });
     }
 
     function getAlbum(albumId) {
@@ -293,11 +321,34 @@
         var albumType = document.getElementById('albumType').value;
         var albumDescription = document.getElementById('albumDescription').value;
         var albumTracks = Array.from(document.getElementsByName('albumTracks[]')).map(input => input.value);
-
+        var albumCoverImage = document.getElementById('albumCoverImage').files[0];
         var tracksParam = albumTracks.map(track => `tracks=${encodeURIComponent(track)}`).join('&');
 
-        debugger;
-        fetch(`?handler=AddAlbum&albumName=${encodeURIComponent(albumName)}&releaseDate=${encodeURIComponent(albumReleaseDate)}&artist=${encodeURIComponent(albumArtist)}&albumType=${encodeURIComponent(albumType)}&description=${encodeURIComponent(albumDescription)}&${tracksParam}`).then(response => {
+        if (albumCoverImage && albumCoverImage.size > 4 * 1024 * 1024) { // 4 MB in bytes
+            alert('File size exceeds 4 MB.');
+            return;
+        }
+
+        fetch('?handler=ClearInputAlbum');
+
+        var formData = new FormData();
+        formData.append('InputAlbum.AlbumName', albumName);
+        formData.append('InputAlbum.ReleaseDate', albumReleaseDate);
+        formData.append('InputAlbum.Artist', albumArtist);
+        formData.append('InputAlbum.AlbumType', albumType);
+        formData.append('InputAlbum.Description', albumDescription);
+        formData.append('InputAlbum.CoverImage', albumCoverImage);
+        albumTracks.forEach((track, index) => {
+            formData.append(`InputAlbum.Tracks[${index}]`, track);
+        });
+
+        fetch('?handler=AddAlbum', {
+            method: 'POST',
+            headers: {
+                "XSRF-TOKEN": document.querySelector("[name='__RequestVerificationToken']").value
+            },
+            body: formData
+        }).then(response => {
             if (response.ok) {
                 location.reload();
             } else {
@@ -312,11 +363,35 @@
         var albumArtist = document.getElementById('albumArtist').value;
         var albumType = document.getElementById('albumType').value;
         var albumDescription = document.getElementById('albumDescription').value;
+        var albumCoverImage = document.getElementById('albumCoverImage').files[0];
         var albumTracks = Array.from(document.getElementsByName('albumTracks[]')).map(input => input.value);
-
         var tracksParam = albumTracks.map(track => `tracks=${encodeURIComponent(track)}`).join('&');
 
-        fetch(`?handler=EditAlbum&albumId=${albumId}&albumName=${encodeURIComponent(albumName)}&releaseDate=${encodeURIComponent(albumReleaseDate)}&artist=${encodeURIComponent(albumArtist)}&albumType=${encodeURIComponent(albumType)}&description=${encodeURIComponent(albumDescription)}&${tracksParam}`).then(response => {
+        fetch('?handler=ClearInputAlbum');
+
+        var formData = new FormData();
+        formData.append('InputAlbum.AlbumId', albumId);
+        formData.append('InputAlbum.AlbumName', albumName);
+        formData.append('InputAlbum.ReleaseDate', albumReleaseDate);
+        formData.append('InputAlbum.Artist', albumArtist);
+        formData.append('InputAlbum.AlbumType', albumType);
+        formData.append('InputAlbum.Description', albumDescription);
+        formData.append('InputAlbum.CoverImage', albumCoverImage);
+        albumTracks.forEach((track, index) => {
+            formData.append(`InputAlbum.Tracks[${index}]`, track);
+        });
+
+        
+        if (albumCoverImage && albumCoverImage.size > 4 * 1024 * 1024) { // 4 MB in bytes
+            alert('File size exceeds 4 MB.');
+            return;
+        }
+
+
+        fetch('?handler=EditAlbum', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
             if (response.ok) {
                 location.reload();
             } else {
@@ -348,6 +423,4 @@
 
         document.getElementById('tracksContainer').appendChild(newTrackInput);
     }
-
-    
 </script>

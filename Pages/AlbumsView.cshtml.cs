@@ -11,6 +11,9 @@ namespace RazorMusic.Pages
         
         [BindProperty(SupportsGet = true)]
         public List<AlbumModel> Albums { get; set; } = new List<AlbumModel>();
+
+        [BindProperty]
+        public AlbumInputModel InputAlbum { get; set; } = null!;
         public void OnGet()
         {
             GetUserAlbums();
@@ -35,15 +38,62 @@ namespace RazorMusic.Pages
             return new JsonResult(new { success = true });
         }
 
-        public IActionResult OnGetAddAlbum(string albumName, DateTime releaseDate, string artist, string albumType, string description, string[] tracks) {
-            albumRepository.AddAlbum(1, new byte[1], albumName, releaseDate, artist, albumType, description, tracks);
+        public IActionResult OnGetClearInputAlbum() {
+            InputAlbum = new AlbumInputModel();
+            return new JsonResult(new { success = true });
+        }
+        public IActionResult OnPostAddAlbum() {
+
+            byte[] coverImageBytes;
+            if (InputAlbum.CoverImage != null) {
+                using (var memoryStream = new MemoryStream()) {
+                    InputAlbum.CoverImage.CopyTo(memoryStream);
+                    coverImageBytes = memoryStream.ToArray();
+                }
+            } else {
+                coverImageBytes = new byte[1];
+            }
+            
+            albumRepository.AddAlbum(1, coverImageBytes, InputAlbum.AlbumName, InputAlbum.ReleaseDate, InputAlbum.Artist, InputAlbum.AlbumType, InputAlbum.Description, InputAlbum.Tracks);
             GetUserAlbums();
             return new JsonResult(new { success = true });
         }
 
-        public IActionResult OnGetEditAlbum(int albumId, string albumName, DateTime releaseDate, string artist, string albumType, string description, string[] tracks) {
-            albumRepository.ModifyAlbum(albumId, 1, new byte[1], albumName, releaseDate, artist, albumType, description, tracks);
+        public IActionResult OnPostEditAlbum() {
+            byte[]? coverImageBytes;
+            if (InputAlbum.CoverImage != null) {
+                using (var memoryStream = new MemoryStream()) {
+                    InputAlbum.CoverImage.CopyTo(memoryStream);
+                    coverImageBytes = memoryStream.ToArray();
+                }
+            } else {
+                coverImageBytes = null;
+            }
+            
+            albumRepository.ModifyAlbum(InputAlbum.AlbumId, 1, coverImageBytes, InputAlbum.AlbumName, InputAlbum.ReleaseDate, InputAlbum.Artist, InputAlbum.AlbumType, InputAlbum.Description, InputAlbum.Tracks);
+            GetUserAlbums();
             return new JsonResult(new { success = true });
         }
+
+        public IActionResult OnGetRetrieveAlbumCover(int albumId) {
+            var album = albumRepository.GetSingleAlbum(albumId);
+            if (album.CoverImage == null) return new JsonResult(new { success = false });
+
+            var base64Image = Convert.ToBase64String(album.CoverImage);
+            return new JsonResult(new { success = true, coverImage = base64Image });
+        }
+    }
+
+    public class AlbumInputModel
+    {   
+        public int AlbumId { get; set; }
+        public int AlbumOwnerId { get; set; } 
+        public string AlbumName { get; set; } = null!;
+        public DateTime ReleaseDate { get; set; }
+        public string Artist { get; set; } = null!;
+        public string AlbumType { get; set; } = null!;
+        public string Description { get; set; } = null!;
+        public string[] Tracks { get; set; } = null!;
+        public IFormFile CoverImage { get; set; } = null!;
     }
 }
