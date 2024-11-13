@@ -10,6 +10,8 @@ public class RegisterModel : PageModel
     [BindProperty]
     public User User { get; set; } = new User();
 
+    public string ErrorMessage { get; set; } = string.Empty;
+
     private readonly UserRepository _userRepository;
     private readonly UserCredentialsService _userCredentialsService;
 
@@ -37,7 +39,7 @@ public class RegisterModel : PageModel
         
         if (_userRepository.EmailExists(User.Email)) 
          {
-             ModelState.AddModelError("User.Email", "Email already exists.");
+             ErrorMessage = "Email already exists.";
              return Page();
          }
 
@@ -45,7 +47,7 @@ public class RegisterModel : PageModel
         // Validate password
         if (!IsValidPassword(User.Password))
         {
-            ModelState.AddModelError("User.Password", "Password must be at least 8 characters long.");
+            ErrorMessage = "Password must be at least 8 characters long.";
             return Page();
         }
 
