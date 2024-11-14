@@ -20,7 +20,7 @@ namespace RazorMusic.Pages
         }
 
 
-        /*
+        
         private void GetUserAlbums() {
             Albums.Clear();
             foreach(var album in albumRepository.GetAlbums()) {
