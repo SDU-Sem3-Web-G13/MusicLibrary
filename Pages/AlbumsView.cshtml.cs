@@ -16,9 +16,11 @@ namespace RazorMusic.Pages
         public AlbumInputModel InputAlbum { get; set; } = null!;
         public void OnGet()
         {
-            GetUserAlbums();
+            
         }
 
+
+        
         private void GetUserAlbums() {
             Albums.Clear();
             foreach(var album in albumRepository.GetAlbums()) {
@@ -97,3 +99,4 @@ namespace RazorMusic.Pages
         public IFormFile CoverImage { get; set; } = null!;
     }
 }
+
