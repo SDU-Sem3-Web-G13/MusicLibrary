@@ -132,7 +132,7 @@ namespace Models.DataAccess
 
         public bool EmailExists(string email)
         {
-            string sql = "SELECT umail FROM users";
+            string sql = "SELECT u_mail FROM users";
             List<string> emails = new List<string>();
 
             using (var cmd = dbAccess.dbDataSource.CreateCommand(sql))

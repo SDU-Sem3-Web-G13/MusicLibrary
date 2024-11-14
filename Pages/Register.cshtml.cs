@@ -30,16 +30,20 @@ public class RegisterModel : PageModel
 
     public IActionResult OnPost()
     {
+        /*
         if (!ModelState.IsValid)
         {
+            Debug.WriteLine("Model state is invalid");
             return Page();
         }
+        */
 
         // Checking if email already exists 
         
         if (_userRepository.EmailExists(User.Email)) 
-         {
-             ErrorMessage = "Email already exists.";
+         {  
+            Debug.WriteLine("Email already exists.");
+            ErrorMessage = "Email already exists.";
              return Page();
          }
 
@@ -47,6 +51,7 @@ public class RegisterModel : PageModel
         // Validate password
         if (!IsValidPassword(User.Password))
         {
+            Debug.WriteLine("Password must be at least 8 characters");
             ErrorMessage = "Password must be at least 8 characters long.";
             return Page();
         }
