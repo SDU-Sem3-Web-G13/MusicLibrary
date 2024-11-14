@@ -14,16 +14,25 @@ namespace RazorMusic.Pages
 
         [BindProperty]
         public AlbumInputModel InputAlbum { get; set; } = null!;
+
         public void OnGet()
         {
-            
+            ValidateSessionStorage();
+            GetUserAlbums();
         }
 
 
-        
+        private void ValidateSessionStorage() {
+            if (HttpContext.Session.GetInt32("IsLoggedIn") != 1) {
+                Response.Redirect("/Login");
+            } 
+        }
+
+
         private void GetUserAlbums() {
             Albums.Clear();
-            foreach(var album in albumRepository.GetAlbums()) {
+            var userId = HttpContext.Session.GetInt32("userId");
+            foreach(var album in albumRepository.GetAlbums(userId ?? 0)) {
                 Albums.Add(album);
             }
         }
@@ -56,7 +65,9 @@ namespace RazorMusic.Pages
                 coverImageBytes = new byte[1];
             }
             
-            albumRepository.AddAlbum(1, coverImageBytes, InputAlbum.AlbumName, InputAlbum.ReleaseDate, InputAlbum.Artist, InputAlbum.AlbumType, InputAlbum.Description, InputAlbum.Tracks);
+            var userId = HttpContext.Session.GetInt32("userId");
+            if (userId == null) return new JsonResult(new { success = false });
+            albumRepository.AddAlbum(userId ?? 0, coverImageBytes, InputAlbum.AlbumName, InputAlbum.ReleaseDate, InputAlbum.Artist, InputAlbum.AlbumType, InputAlbum.Description, InputAlbum.Tracks);
             GetUserAlbums();
             return new JsonResult(new { success = true });
         }
@@ -71,8 +82,11 @@ namespace RazorMusic.Pages
             } else {
                 coverImageBytes = null;
             }
+            var userId = HttpContext.Session.GetInt32("userId");
+
+            if(userId == null) return new JsonResult(new { success = false });
             
-            albumRepository.ModifyAlbum(InputAlbum.AlbumId, 1, coverImageBytes, InputAlbum.AlbumName, InputAlbum.ReleaseDate, InputAlbum.Artist, InputAlbum.AlbumType, InputAlbum.Description, InputAlbum.Tracks);
+            albumRepository.ModifyAlbum(InputAlbum.AlbumId, userId ?? 0 , coverImageBytes, InputAlbum.AlbumName, InputAlbum.ReleaseDate, InputAlbum.Artist, InputAlbum.AlbumType, InputAlbum.Description, InputAlbum.Tracks);
             GetUserAlbums();
             return new JsonResult(new { success = true });
         }

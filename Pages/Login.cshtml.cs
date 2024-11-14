@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Models.DataAccess;
 using Models.Services;
+using Microsoft.AspNetCore.Http;
 
 public class LoginModel : PageModel
 {
@@ -46,7 +47,9 @@ public class LoginModel : PageModel
 
         if (userCredentialsService.ValidateCredentials(hashedEmailHex, hashedPasswordHex))
         {
-            return RedirectToPage("/AlbumsView");
+            HttpContext.Session.SetInt32("IsLoggedIn", 1);
+            HttpContext.Session.SetInt32("userId", _userRepository.GetUserId(User.Email));
+            return RedirectToPage("AlbumsView");
         }
         else
         {

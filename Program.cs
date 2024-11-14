@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddMvc().AddRazorPagesOptions(o =>
             o.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()));
+builder.Services.AddSession();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
@@ -19,13 +21,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
-
+app.UseSession();
 app.MapRazorPages();
 
 app.Run();
-
-//a comment
