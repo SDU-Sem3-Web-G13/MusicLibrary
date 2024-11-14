@@ -16,10 +16,19 @@ public class IndexModel : PageModel
     }
 
     public void OnGet()
-    {      
+    {
+        ClearSession();
     }
+
     public void OnPost()
     {
         
+    }
+
+    private void ClearSession()
+    {
+        HttpContext.Session.Clear();
+        HttpContext.Session.SetInt32("IsLoggedIn", 0);
+        HttpContext.Session.SetString("UserEmail", "");
     }
 }
