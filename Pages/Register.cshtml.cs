@@ -10,6 +10,7 @@ public class RegisterModel : PageModel
     [BindProperty]
     public User User { get; set; } = new User();
 
+    [BindProperty]
     public string ErrorMessage { get; set; } = string.Empty;
 
     private readonly UserRepository _userRepository;
@@ -30,14 +31,7 @@ public class RegisterModel : PageModel
 
     public IActionResult OnPost()
     {
-        /*
-        if (!ModelState.IsValid)
-        {
-            Debug.WriteLine("Model state is invalid");
-            return Page();
-        }
-        */
-
+       
         // Checking if email already exists 
         
         if (_userRepository.EmailExists(User.Email)) 

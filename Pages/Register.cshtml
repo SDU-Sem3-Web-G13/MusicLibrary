@@ -33,7 +33,10 @@
     </div>
     
     <button type="submit" class="btn btn-primary">Register</button>
-
+    @if (Model.ErrorMessage != null)
+    {
+        <p class="text-danger">@Model.ErrorMessage</p>
+    }
    
 
 </form>
