@@ -46,7 +46,7 @@ public class LoginModel : PageModel
 
         if (userCredentialsService.ValidateCredentials(hashedEmailHex, hashedPasswordHex))
         {
-            return RedirectToPage("/Index");
+            return RedirectToPage("/AlbumsView");
         }
         else
         {
