@@ -15,13 +15,11 @@ public class LoginModel : PageModel
     [BindProperty]
     public string? Password { get; set; }
 
-    private readonly UserRepository _userRepository;
     private readonly UserCredentialsService userCredentialsService;
     private readonly string fixedSalt;
 
     public LoginModel()
     {
-        _userRepository = new UserRepository();
         userCredentialsService = new UserCredentialsService();
         fixedSalt = userCredentialsService.GetFixedSalt();
     }
@@ -33,10 +31,16 @@ public class LoginModel : PageModel
 
     public IActionResult OnPost()
     {
+        if (!ModelState.IsValid)
+        {
+            ErrorMessage = "Email and password are required.";
+            return new JsonResult(new { success = false, errorMessage = ErrorMessage });
+        }
+
         if (string.IsNullOrEmpty(User.Email) || string.IsNullOrEmpty(User.Password))
         {
             ErrorMessage = "Email and password are required.";
-            return Page();
+            return new JsonResult(new { success = false, errorMessage = ErrorMessage });
         }
 
         string emailHash = BCrypt.Net.BCrypt.HashPassword(User.Email, fixedSalt);
@@ -46,14 +50,16 @@ public class LoginModel : PageModel
 
         if (userCredentialsService.ValidateCredentials(hashedEmailHex, hashedPasswordHex))
         {
-            return RedirectToPage("/AlbumsView");
+            return new JsonResult(new { success = true, redirectUrl = Url.Page("/AlbumsView") });
         }
         else
         {
             ErrorMessage = "Invalid email or password.";
         }
 
-        return Page(); // direct to album page
+        return new JsonResult(new { success = false, errorMessage = ErrorMessage });
     }
+
+
 
 }

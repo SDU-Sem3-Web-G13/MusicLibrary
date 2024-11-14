@@ -1,30 +1,13 @@
-@page
 @model LoginModel
-@{
-    ViewData["Title"] = "Login";
-}
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
-<h2>Login</h2>
+<form id="loginForm" method="post">
+    <input asp-for="User.Email" placeholder="Email" />
+    <span asp-validation-for="User.Email" class="text-danger"></span>
 
-<form method="post">
-    
-    <div class="form-group">
-        <label asp-for="User.Email" class="control-label">Email</label>
-        <input asp-for="User.Email" class="form-control" id="Email" placeholder="Enter your email" />
-        <span asp-validation-for="User.Email" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group">
-        <label asp-for="User.Password" class="control-label">Password</label>
-        <input asp-for="User.Password" type="password" class="form-control" id="Password" placeholder="Enter your password" />
-        <span asp-validation-for="User.Password" class="text-danger"></span>
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Login</button>
+    <input asp-for="User.Password" type="password" placeholder="Password" />
+    <span asp-validation-for="User.Password" class="text-danger"></span>
 
-    
+    <button type="submit">Login</button>
+    <div id="loginError" class="text-danger">@Model.ErrorMessage</div>
 </form>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

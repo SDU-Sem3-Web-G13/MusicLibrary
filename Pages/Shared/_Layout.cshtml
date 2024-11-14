@@ -10,37 +10,64 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <header class="containter">
+    <header class="container">
         <div class="razor-logo">
             <a href="Index">
                 <img src="razor-logo.png" alt="RazorMusic Logo">
             </a>
         </div>
-            <nav class="nav-horizontal">
-                <a class="nav-link text-dark" asp-area="" asp-page="/About">About</a>
-                <a class="nav-link text-dark" asp-area="" asp-page="/FAQ">FAQ</a>
-                <a class="nav-link text-dark" asp-area="" asp-page="/Contact">Contact</a>
-            </nav>  
+        <nav class="nav-horizontal">
+            <a class="nav-link text-dark" asp-area="" asp-page="/About">About</a>
+            <a class="nav-link text-dark" asp-area="" asp-page="/FAQ">FAQ</a>
+            <a class="nav-link text-dark" asp-area="" asp-page="/Contact">Contact</a>
+        </nav>
         <div class="nav-horizontal">
-            <a class="nav-link text-dark" asp-area="" asp-page="/Login">
-                <button class="animated-btn">Sign In</button>
-            </a>
-            <a class="nav-link text-dark" asp-area="" asp-page="/Register">
-                <button class="animated-btn">Sign Up</button>
-            </a>
+            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#loginModal">Sign In</button>
+            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#registerModal">Sign Up</button>
         </div>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
+    <!-- Login Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @await Html.PartialAsync("Login", new LoginModel())
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    @await Html.PartialAsync("Register", new RegisterModel())
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div>
             &copy; 2024 - RazorMusic
         </div>
-        <div class="nav-horizontal">                
+        <div class="nav-horizontal">
             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy Policy</a>
             <a class="nav-link text-dark" asp-area="" asp-page="/TermsOfUse">Terms Of Use</a>
             <a class="nav-link text-dark" asp-area="" asp-page="/About">About</a>
@@ -56,3 +83,44 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<script>
+        $(document).ready(function () {
+        $('#loginForm').submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: '/Login',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        $('#loginError').text(response.errorMessage);
+                    }
+                },
+                error: function () {
+                    $('#loginError').text('An error occurred. Please try again.');
+                }
+            });
+        });
+
+        $('#registerForm').submit(function (event) {
+            event.preventDefault();
+            $.ajax({
+                url: '/Register',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.success) {
+                        window.location.href = response.redirectUrl;
+                    } else {
+                        $('#registerError').text(response.errorMessage);
+                    }
+                },
+                error: function () {
+                    $('#registerError').text('An error occurred. Please try again.');
+                }
+            });
+        });
+    });
+</script>

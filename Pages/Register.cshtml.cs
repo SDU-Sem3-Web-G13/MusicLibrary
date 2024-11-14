@@ -36,10 +36,9 @@ public class RegisterModel : PageModel
         
         if (_userRepository.EmailExists(User.Email)) 
          {  
-            Debug.WriteLine("Email already exists.");
             ErrorMessage = "Email already exists.";
-             return Page();
-         }
+            return new JsonResult(new { success = false, errorMessage = ErrorMessage });
+        }
 
 
         // Validate password
@@ -47,7 +46,7 @@ public class RegisterModel : PageModel
         {
             Debug.WriteLine("Password must be at least 8 characters");
             ErrorMessage = "Password must be at least 8 characters long.";
-            return Page();
+            return new JsonResult(new { success = false, errorMessage = ErrorMessage });
         }
 
         try
@@ -61,12 +60,12 @@ public class RegisterModel : PageModel
             _userRepository.AddUser(User.FirstName, User.Email);
             _userCredentialsService.AddUserCredentials(emailHashBytes, passwordHashBytes);
 
-            return RedirectToPage("/Login"); // we can chage to which page we want to redirect
+            return new JsonResult(new { success = true, redirectUrl = Url.Page("/Login") });
         }
         catch(Exception e)
         {
-            Debug.WriteLine(e.Message);
-            
+            return new JsonResult(new { success = false, errorMessage = ErrorMessage });
+
         }
         return Page();
 
