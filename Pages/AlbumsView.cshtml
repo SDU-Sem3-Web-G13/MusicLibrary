@@ -37,7 +37,7 @@
             <div class="col-md-4">
                 <div class="card mb-4 shadow-sm rounded" onclick="toggleDetails('details-@album.Id')" style="cursor: pointer;">
                     <div class="card-body">
-                        <img src="data:image/jpeg;base64,@album.GetCoverImageBase64()" class="card-img-top" alt="@album.AlbumName" style="width: 100%; height: auto; margin-bottom: 10px;" />
+                        <img src="data:image/jpeg;base64,@album.GetCoverImageBase64()" class="card-img-top" alt="@album.AlbumName" style="width: 100%; height: auto; max-height: 374px; margin-bottom: 10px;" />
                         <strong><h4 class="card-title">@album.AlbumName</h4></strong>
                         <p class="card-text" style="color: gray; margin-top: -10px;">by @album.Artist</p>
                     </div>
