@@ -29,8 +29,18 @@
         <input asp-for="User.Password" type="password" class="form-control form-input" id="Password" placeholder="Enter your password" />
         <span asp-validation-for="User.Password" class="text-danger"></span>
     </div>
-    
+
+    @if (Model.ErrorMessage != null)
+    {
+        <div class="alert alert-danger" role="alert" style="margin-top: 10px">
+            @Model.ErrorMessage
+        </div>
+    }
+   
     <button type="submit" class="btn btn-primary submit-button">Login</button>
+
+    
+    
 
     
 </form>
