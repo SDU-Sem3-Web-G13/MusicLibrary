@@ -15,6 +15,10 @@ namespace Models.DataAccess
 
         public void AddAlbum(int owner, byte[] cover, string albumName, DateTime releaseDate, string artist, string type, string description, string[] tracks)
         {
+            if(tracks == null)
+            {
+                tracks = new string[0];
+            }
             string sql = "INSERT INTO albums (a_owner, a_cover, a_name, a_releaseDate, a_artist, a_type, a_desc, a_tracks) VALUES (@owner, @cover, @albumName, @releaseDate, @artist, @type, @description, @tracks::text[])";
             dbAccess.ExecuteNonQuery(sql, ("@owner", owner), ("@cover", cover), ("@albumName", albumName), ("@releaseDate", releaseDate), ("@artist", artist), ("@type", type), ("@description", description), ("@tracks", tracks));
         }
@@ -27,6 +31,10 @@ namespace Models.DataAccess
 
         public void ModifyAlbum(int id, int owner, byte[]? cover, string albumName, DateTime releaseDate, string artist, string type, string description, string[] tracks)
         {
+            if (tracks == null)
+            {
+                tracks = new string[0];
+            }
             string sql = $"UPDATE albums SET a_owner = @owner,{(cover != null ?  " a_cover = @cover," : "")} a_name = @albumName, a_releaseDate = @releaseDate, a_artist = @artist, a_type = @type, a_desc = @description, a_tracks = @tracks::text[] WHERE a_id = @id";
             if(cover != null) dbAccess.ExecuteNonQuery(sql, ("@id", id), ("@owner", owner), ("@cover", cover), ("@albumName", albumName), ("@releaseDate", releaseDate), ("@artist", artist), ("@type", type), ("@description", description), ("@tracks", tracks));
             else dbAccess.ExecuteNonQuery(sql, ("@id", id), ("@owner", owner), ("@albumName", albumName), ("@releaseDate", releaseDate), ("@artist", artist), ("@type", type), ("@description", description), ("@tracks", tracks));

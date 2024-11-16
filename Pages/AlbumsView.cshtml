@@ -43,6 +43,12 @@
     object-fit: cover;
 }
 
+    .error-message {
+        color: red;
+        font-size: 0.875em;
+        margin-top: 5px;
+    }
+
 </style>
 
 <div class="container">
@@ -138,47 +144,51 @@
             <div class="modal-body">
                 <form method="post" enctype="multipart/form-data" id="createAlbumForm">
                     <div class="form-group">
-                        
                         <div class="album-input">
                             <label for="albumName">Album Name</label>
                             <input type="text" class="form-control" id="albumName" name="albumName" required />
+                            <div id="albumNameError" class="error-message"></div>
                         </div>
                         <div class="album-input">
                             <label for="albumReleaseDate">Release Date</label>
                             <input type="date" class="form-control" id="albumReleaseDate" name="albumReleaseDate" />
+                            <div id="albumReleaseDateError" class="error-message"></div>
                         </div>
 
                         <div class="album-input">
                             <label for="albumArtist">Artist</label>
                             <input type="text" class="form-control" id="albumArtist" name="albumArtist" />
+                            <div id="albumArtistError" class="error-message"></div>
                         </div>
 
                         <div class="album-input">
                             <label for="albumType">Type</label>
-                            <select class="form-control" id="albumType" name="albumType" >
+                            <select class="form-control" id="albumType" name="albumType">
                                 <option value="Single">Single</option>
                                 <option value="EP">EP</option>
                                 <option value="LP">LP</option>
                             </select>
+                            <div id="albumTypeError" class="error-message"></div>
                         </div>
 
                         <div class="album-input">
                             <label for="albumDescription">Description</label>
-                            <textarea class="form-control" id="albumDescription" name="albumDescription" ></textarea>
+                            <textarea class="form-control" id="albumDescription" name="albumDescription"></textarea>
+                            <div id="albumDescriptionError" class="error-message"></div>
                         </div>
 
                         <div class="album-input">
                             <label for="albumTracks">Tracks</label>
-                            <div id="tracksContainer">
-
-                            </div>
+                            <div id="tracksContainer"></div>
                             <button type="button" class="btn btn-secondary" id="addTrackButton" onclick="addNewTrackInput()">Add Track</button>
+                            <div id="albumTracksError" class="error-message"></div>
                         </div>
 
                         <div class="album-input">
                             <label for="albumCoverImage">Cover Image</label>
-                            <input type="file" class="form-control" id="albumCoverImage" name="albumCoverImage" accept="image/png, image/jpeg"  onchange="displayImage(this)" />
+                            <input type="file" class="form-control" id="albumCoverImage" name="albumCoverImage" accept="image/png, image/jpeg" onchange="displayImage(this)" />
                             <small id="fileSizeLimit" class="form-text text-muted">Maximum file size: 4mb</small>
+                            <div id="albumCoverImageError" class="error-message"></div>
                         </div>
 
                         <img id="coverImagePreview" src="#" alt="Cover Image" style="display: none; width: 100%; height: auto;" />
@@ -195,6 +205,67 @@
 
 
 <script>
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            var modal = document.querySelector('.modal.show');
+            if (modal) {
+                var confirmButton = modal.querySelector('.btn-primary');
+                if (confirmButton) {
+                    event.preventDefault();
+                    confirmButton.click();
+                }
+            }
+        }
+    });
+
+    function validateAlbumForm() {
+        var isValid = true;
+
+        var albumName = document.getElementById('albumName').value.trim();
+        var albumReleaseDate = document.getElementById('albumReleaseDate').value.trim();
+        var albumArtist = document.getElementById('albumArtist').value.trim();
+        var albumDescription = document.getElementById('albumDescription').value.trim();
+        var albumCoverImage = document.getElementById('albumCoverImage').files[0];
+        
+
+        document.getElementById('albumNameError').innerText = '';
+        document.getElementById('albumReleaseDateError').innerText = '';
+        document.getElementById('albumArtistError').innerText = '';
+        document.getElementById('albumTypeError').innerText = '';
+        document.getElementById('albumDescriptionError').innerText = '';
+        document.getElementById('albumTracksError').innerText = '';
+        document.getElementById('albumCoverImageError').innerText = '';
+
+        if (!albumName) {
+            document.getElementById('albumNameError').innerText = 'Album Name is required.';
+            isValid = false;
+        }
+
+        if (!albumReleaseDate) {
+            document.getElementById('albumReleaseDateError').innerText = 'Release Date is required.';
+            isValid = false;
+        }
+
+        if (!albumArtist) {
+            document.getElementById('albumArtistError').innerText = 'Artist is required.';
+            isValid = false;
+        }
+
+        if(!albumDescription) {
+            document.getElementById('albumDescriptionError').innerText = 'Description is required.';
+            isValid = false;
+        }
+
+        if (albumCoverImage && albumCoverImage.size > 4 * 1024 * 1024) { // 4 MB in bytes
+            document.getElementById('albumCoverImageError').innerText = 'File size exceeds 4 MB.';
+            isValid = false;
+        }
+
+
+        return isValid;
+    }
+
+
     function showAlbumDetails(albumId) {
         var album = getAlbum(albumId);
         document.getElementById('album-name').innerText = album.albumName;
@@ -383,6 +454,10 @@
     }
 
     function createAlbum() {
+        if (!validateAlbumForm()) {
+            return;
+        }
+
         var albumName = document.getElementById('albumName').value;
         var albumReleaseDate = document.getElementById('albumReleaseDate').value;
         var albumArtist = document.getElementById('albumArtist').value;
@@ -426,6 +501,10 @@
     }
 
     function editAlbum(albumId) {
+        if (!validateAlbumForm()) {
+            return;
+        }
+
         var albumName = document.getElementById('albumName').value;
         var albumReleaseDate = document.getElementById('albumReleaseDate').value;
         var albumArtist = document.getElementById('albumArtist').value;
