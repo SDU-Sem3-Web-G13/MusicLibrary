@@ -16,7 +16,7 @@ def main():
     UPASS_HASHED = bcrypt.hashpw(UPASS.encode('utf-8'), fixed_salt)
     
     QUERY1 = str("INSERT INTO USER_CREDENTIALS (UMAIL_HASH, UPASS_HASH) VALUES (decode('" +  str(UMAIL_HASHED.hex()) + "', 'hex'), decode('" +  str(UPASS_HASHED.hex()) + "', 'hex'));")
-    QUERY2 = str("INSERT INTO USERS (U_NAME, U_MAIL) VALUES ('Admin', '" + UMAIL + "');")
+    QUERY2 = str("INSERT INTO USERS (U_NAME, U_MAIL, U_ISADMIN) VALUES ('Admin', '" + UMAIL + "', TRUE);")
     
     QUERY = str("BEGIN;\n\n" + QUERY1 + "\n" + QUERY2 + "\n\nCOMMIT;")
     
