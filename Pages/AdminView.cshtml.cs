@@ -40,6 +40,16 @@ public class AdminViewModel : PageModel
         return new JsonResult(new { success = true });
     }
 
+    public IActionResult OnGetDeleteUser(int userId) {
+        if(userRepository.IsAdmin(userId)) {
+            return new JsonResult(new { success = false, message = "Cannot delete admin user" });
+        }
+        userRepository.DeleteUser(userId);
+        albumRepository.DeleteAllUserAlbums(userId);
+        GetUsersAndAlbums();
+        return new JsonResult(new { success = true });
+    }
+
     private void ValidateSessionStorage() {
         if (HttpContext.Session.GetInt32("IsLoggedIn") != 1) {
             Response.Redirect("/Login");

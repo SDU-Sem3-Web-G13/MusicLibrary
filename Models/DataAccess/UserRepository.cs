@@ -48,10 +48,8 @@ namespace Models.DataAccess
         #endregion
 
         #region Delete methods
-        public void DeleteUser(string name)
+        public void DeleteUser(int id)
         {
-            string idSql = "SELECT U_ID FROM USERS WHERE U_NAME = @name";
-            int id = dbAccess.GetId(idSql, "@name", name);
             string sql = "DELETE FROM USERS WHERE U_ID = @id";
             dbAccess.ExecuteNonQuery(sql, ("@id", id));
         }
