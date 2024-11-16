@@ -48,7 +48,9 @@ public class LoginModel : PageModel
         if (userCredentialsService.ValidateCredentials(hashedEmailHex, hashedPasswordHex))
         {
             HttpContext.Session.SetInt32("IsLoggedIn", 1);
-            HttpContext.Session.SetInt32("userId", _userRepository.GetUserId(User.Email));
+            var userId = _userRepository.GetUserId(User.Email);
+            HttpContext.Session.SetInt32("userId", userId);
+            HttpContext.Session.SetInt32("IsAdmin", _userRepository.IsAdmin(userId) ? 1 : 0);
             ErrorMessage = null;
             return RedirectToPage("AlbumsView");
         }
