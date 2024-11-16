@@ -42,7 +42,7 @@
                         <button class="animated-btn">Admin</button>
                     </a>
                 }
-                <a class="nav-link text-dark" asp-area="" asp-page="/Index">
+                <a class="nav-link text-dark" onclick="Logout()">
                     <button class="animated-btn">Logout</button>
                 </a>
             }
@@ -74,4 +74,24 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-</html>  
+</html>
+
+<script>
+    function Logout() {
+        $.ajax({
+            url: '/Index?handler=Logout',
+            type: 'GET',
+            async: false,
+            success: function(response) {
+                if (response.success) {
+                    window.location.href = '/Login';
+                } else {
+                    console.error('Failed to logout');
+                }
+            },
+            error: function() {
+                console.error('Error in AJAX request');
+            }
+        });
+    }
+</script>
