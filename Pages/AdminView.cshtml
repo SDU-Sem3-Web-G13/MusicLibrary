@@ -144,11 +144,18 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            const activeTab = localStorage.getItem('activeTab');
+            if (activeTab) {
+                $(`#adminTabs a[href="${activeTab}"]`).tab('show');
+            }
+
             $('#adminTabs a').on('click', function (e) {
                 e.preventDefault();
-                $(this).tab('show');
+                $(this).tab('show'); 
+                localStorage.setItem('activeTab', $(this).attr('href')); 
             });
         });
+
 
         function showDeleteModal(albumId) {
             var modal = document.getElementById('deleteModal');
