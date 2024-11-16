@@ -5,7 +5,8 @@ BEGIN;
 CREATE TABLE USERS (
     U_ID SERIAL PRIMARY KEY,
     U_NAME VARCHAR(50) NOT NULL,
-    U_MAIL VARCHAR(72) NOT NULL -- 72 is the maximum input length for BCrypt
+    U_MAIL VARCHAR(72) NOT NULL, -- 72 is the maximum input length for BCrypt
+    U_ISADMIN BOOL NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE USER_CREDENTIALS (
