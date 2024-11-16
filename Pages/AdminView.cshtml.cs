@@ -44,8 +44,8 @@ public class AdminViewModel : PageModel
         if(userRepository.IsAdmin(userId)) {
             return new JsonResult(new { success = false, message = "Cannot delete admin user" });
         }
-        userRepository.DeleteUser(userId);
         albumRepository.DeleteAllUserAlbums(userId);
+        userRepository.DeleteUser(userId);
         GetUsersAndAlbums();
         return new JsonResult(new { success = true });
     }
