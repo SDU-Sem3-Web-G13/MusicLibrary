@@ -29,10 +29,10 @@
             @if (Context.Session.GetInt32("IsLoggedIn") != 1)
             {
                 <a class="nav-link text-dark" asp-area="" asp-page="/Login">
-                    <button class="animated-btn">Sign In</button>
+                    <button class="animated-btn">Login</button>
                 </a>
                 <a class="nav-link text-dark" asp-area="" asp-page="/Register">
-                    <button class="animated-btn">Sign Up</button>
+                    <button class="animated-btn">Register</button>
                 </a>
             }
             else{
