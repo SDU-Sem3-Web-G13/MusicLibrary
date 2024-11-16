@@ -4,26 +4,51 @@
     ViewData["Title"] = "Login";
 }
 
-<h2>Login</h2>
+<style>
+    .form-input {
+        margin-bottom: 10px;
+    }
+    .submit-button {
+        margin-top: 10px;
+    }
+    .form-container {
+        min-width: 400px; 
+        align-items: center;
+    }
+    .form-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+    }
+</style>
 
-<form method="post">
-    
-    <div class="form-group">
-        <label asp-for="User.Email" class="control-label">Email</label>
-        <input asp-for="User.Email" class="form-control" id="Email" placeholder="Enter your email" />
-        <span asp-validation-for="User.Email" class="text-danger"></span>
-    </div>
-    
-    <div class="form-group">
-        <label asp-for="User.Password" class="control-label">Password</label>
-        <input asp-for="User.Password" type="password" class="form-control" id="Password" placeholder="Enter your password" />
-        <span asp-validation-for="User.Password" class="text-danger"></span>
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Login</button>
+<div class="form-wrapper">
+    <form method="post">
+        <h2>Login</h2>
+        <div class="form-container">
+            <div class="form-group">
+                <label asp-for="User.Email" class="control-label">Email</label>
+                <input asp-for="User.Email" class="form-control form-input" id="Email" placeholder="Enter your email" />
+                <span asp-validation-for="User.Email" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="User.Password" class="control-label">Password</label>
+                <input asp-for="User.Password" type="password" class="form-control form-input" id="Password" placeholder="Enter your password" />
+                <span asp-validation-for="User.Password" class="text-danger"></span>
+            </div>
 
-    
-</form>
+            @if (Model.ErrorMessage != null)
+            {
+                <div class="alert alert-danger" role="alert" style="margin-top: 10px">
+                    @Model.ErrorMessage
+                </div>
+            }
+            <button type="submit" class="btn btn-primary submit-button">Login</button>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

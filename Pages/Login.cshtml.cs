@@ -2,13 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Models.DataAccess;
 using Models.Services;
+using Microsoft.AspNetCore.Http;
 
 public class LoginModel : PageModel
 {
     [BindProperty]
     public User User { get; set; } = new User(); 
 
-    public string ErrorMessage { get; set; } = string.Empty;
+    public string? ErrorMessage { get; set; } = null;
 
     [BindProperty]
     public string? Email { get; set; }
@@ -46,7 +47,10 @@ public class LoginModel : PageModel
 
         if (userCredentialsService.ValidateCredentials(hashedEmailHex, hashedPasswordHex))
         {
-            return RedirectToPage("/AlbumsView");
+            HttpContext.Session.SetInt32("IsLoggedIn", 1);
+            HttpContext.Session.SetInt32("userId", _userRepository.GetUserId(User.Email));
+            ErrorMessage = null;
+            return RedirectToPage("AlbumsView");
         }
         else
         {

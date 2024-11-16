@@ -32,9 +32,9 @@ namespace Models.DataAccess
             else dbAccess.ExecuteNonQuery(sql, ("@id", id), ("@owner", owner), ("@albumName", albumName), ("@releaseDate", releaseDate), ("@artist", artist), ("@type", type), ("@description", description), ("@tracks", tracks));
         }
 
-        public List<AlbumModel> GetAlbums()
+        public List<AlbumModel> GetAlbums(int userID)
         {
-            string query = "SELECT * FROM albums";
+            string query = $"SELECT * FROM albums where a_owner = {userID}";
 
             List<AlbumModel> albums = new List<AlbumModel>();
 

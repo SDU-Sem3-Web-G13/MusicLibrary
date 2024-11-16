@@ -26,6 +26,23 @@
     using System.Reflection.Metadata;
     margin-bottom: 10px;
 }
+
+.image-container {
+    width: 100%;
+    padding-top: 100%; /* 1:1 Aspect Ratio */
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.image-container img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 </style>
 
 <div class="container">
@@ -35,29 +52,13 @@
         @foreach (var album in Model.Albums)
         {
             <div class="col-md-4">
-                <div class="card mb-4 shadow-sm rounded" onclick="toggleDetails('details-@album.Id')" style="cursor: pointer;">
+                <div class="card mb-4 shadow-sm rounded" onclick="showAlbumDetails('@album.Id')" style="cursor: pointer;">
                     <div class="card-body">
-                        <img src="data:image/jpeg;base64,@album.GetCoverImageBase64()" class="card-img-top" alt="@album.AlbumName" style="width: 100%; height: auto; margin-bottom: 10px;" />
+                        <div class="image-container">
+                            <img src="data:image/jpeg;base64,@album.GetCoverImageBase64()" class="card-img-top" alt="@album.AlbumName" />
+                        </div>
                         <strong><h4 class="card-title">@album.AlbumName</h4></strong>
                         <p class="card-text" style="color: gray; margin-top: -10px;">by @album.Artist</p>
-                    </div>
-                    <div id="details-@album.Id" class="card-body" style="display: none;">
-                        <p class="card-text">Release Date: @album.ReleaseDate</p>
-                        <p class="card-text">Type: @album.AlbumType</p>
-                        <p class="card-text">Description: @album.Description</p>
-                        <p class="card-text">Tracks:</p>
-                        <ul>
-                            @foreach (var track in album.Tracks)
-                            {
-                                <li>@track</li>
-                            }
-                        </ul>
-                        <button class="btn btn-danger" onclick="event.stopPropagation(); showDeleteModal('@album.Id')">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button type="button" class="btn btn-primary" onclick="event.stopPropagation(); showEditModal('@album.Id')">
-                            <i class="fas fa-edit"></i>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -68,6 +69,46 @@
         Add Album
     </button>
 </div>
+
+<!-- Album Detail Modal -->
+<div class="modal" id="detailModal" tabindex="-1" role="dialog" daa-album-itemid="">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-flex align-items-center">
+                <h5 class="modal-title" id="album-name"></h5>
+                <p class="ml-2 mb-0" style="color: gray;"><span id="details-artist"></span></p>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-7" style="max-height: 400px; overflow-y: auto;">
+                        <p><strong>Release Date</strong> <br /> <span id="details-releaseDate"></span></p>
+                        <p><strong>Type</strong> <br /> <span id="details-albumType"></span></p>
+                        <p><strong>Description</strong> <br /> <span id="details-description"></span></p>
+                        <p><strong>Tracks</strong> <br /> </p>
+                        <ul id="details-tracksList"></ul>
+                    </div>
+                    <div class="col-md-5 text-center">
+                        <div style="width: 100%; height: 300px; overflow: hidden;">
+                            <img id="details-coverImage" src="#" alt="Cover Image" style="width: 100%; height: 100%; object-fit: contain;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <div>
+                    <button type="button" class="btn btn-primary" onclick="event.stopPropagation(); showEditModal()">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-danger" onclick="event.stopPropagation(); showDeleteModal()">
+                        <i class="fas fa-trash-alt"></i> Delete
+                    </button>
+                </div>
+                <button type="button" class="btn btn-secondary" id="closeDetailsButton">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Delete Album Modal -->
 <div class="modal" id="deleteModal" tabindex="-1" role="dialog">
@@ -154,13 +195,35 @@
 
 
 <script>
-    function toggleDetails(id) {
-        var element = document.getElementById(id);
-        if (element.style.display === "none") {
-            element.style.display = "block";
-        } else {
-            element.style.display = "none";
-        }
+    function showAlbumDetails(albumId) {
+        var album = getAlbum(albumId);
+        document.getElementById('album-name').innerText = album.albumName;
+        document.getElementById('details-releaseDate').innerText = new Date(album.releaseDate).toLocaleDateString();
+        document.getElementById('details-albumType').innerText = album.albumType;
+        document.getElementById('details-description').innerText = album.description;
+        document.getElementById('details-artist').innerText = album.artist;
+        var closeDetailsButton = document.getElementById('closeDetailsButton');
+
+        const tracksList = document.getElementById('details-tracksList');
+        tracksList.innerHTML = '';
+
+        album.tracks.forEach(track => {
+            const li = document.createElement('li');
+            li.innerText = track;
+            tracksList.appendChild(li);
+        });
+
+        closeDetailsButton.onclick = function() {
+            $('#detailModal').modal('hide');
+        };
+
+        var img = document.getElementById('details-coverImage');
+        img.src = `data:image/png;base64,${album.coverImage}`; 
+        img.style.display = 'block';
+
+        document.getElementById('detailModal').setAttribute('data-album-id', album.id);
+
+        $('#detailModal').modal('show');
     }
 
     function displayImage(input) {
@@ -177,7 +240,8 @@
         }
     }
 
-    function showDeleteModal(albumId) {
+    function showDeleteModal() {
+        var albumId = document.getElementById('detailModal').getAttribute('data-album-id');
         var modal = document.getElementById('deleteModal');
         var confirmButton = document.getElementById('confirmDeleteButton');
         var cancelButton = document.getElementById('cancelDeleteButton');
@@ -186,8 +250,10 @@
         };
         cancelButton.onclick = function() {
             $(modal).modal('hide');
+            $(document.getElementById('detailModal')).modal('show');
         };
 
+        $(document.getElementById('detailModal')).modal('hide');
         $(modal).modal('show');
     }
 
@@ -211,7 +277,8 @@
         $(modal).modal('show');
     }
 
-    function showEditModal(albumId) {
+    function showEditModal() {
+        var albumId = document.getElementById('detailModal').getAttribute('data-album-id');
         var modal = document.getElementById('createModal');
         var modalTitle = document.getElementById('createModalTitle');
         var confirmButton = document.getElementById('confirmCreateButton');
@@ -226,10 +293,11 @@
         
 
         confirmButton.onclick = function() {
-            editAlbum(albumId);
+            editAlbum(albumId)
         };
         cancelButton.onclick = function() {
             $(modal).modal('hide');
+            $(document.getElementById('detailModal')).modal('show');
         };
 
         modalTitle.innerHTML = 'Edit Album';
@@ -269,7 +337,7 @@
             addNewTrackInput(track);
         });
 
-
+        $(document.getElementById('detailModal')).modal('hide');
         $(modal).modal('show');
     }
 
@@ -398,6 +466,8 @@
                 alert('Failed to edit album.');
             }
         });
+
+        return true;
     }
 
     function addNewTrackInput(trackName = '') {

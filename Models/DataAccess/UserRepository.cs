@@ -88,6 +88,22 @@ namespace Models.DataAccess
             return users;
         }
 
+        public int GetUserId(string email) 
+        {
+            string query = $"SELECT u_id FROM USERS WHERE U_MAIL = '{email}' LIMIT 1";
+            using(var cmd = dbAccess.dbDataSource.CreateCommand(query))
+            {
+                using(var reader = cmd.ExecuteReader())
+                {
+                    if(reader.Read())
+                    {
+                        return reader.GetInt32(0);
+                    }
+                }
+            }
+            return 0;
+        }
+
         public bool VerifyUserCredentials(string email, string password)
         {
             string query = $"SELECT * FROM USER_CREDENTIALS WHERE umail_hash = {email}";

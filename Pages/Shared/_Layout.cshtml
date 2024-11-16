@@ -17,17 +17,30 @@
             </a>
         </div>
             <nav class="nav-horizontal">
+                @if (Context.Session.GetInt32("IsLoggedIn") == 1)
+                {
+                <a class="nav-link text-dark" asp-area="" asp-page="/AlbumsView">Albums</a>
+                }
                 <a class="nav-link text-dark" asp-area="" asp-page="/About">About</a>
                 <a class="nav-link text-dark" asp-area="" asp-page="/FAQ">FAQ</a>
                 <a class="nav-link text-dark" asp-area="" asp-page="/Contact">Contact</a>
             </nav>  
         <div class="nav-horizontal">
-            <a class="nav-link text-dark" asp-area="" asp-page="/Login">
-                <button class="animated-btn">Sign In</button>
-            </a>
-            <a class="nav-link text-dark" asp-area="" asp-page="/Register">
-                <button class="animated-btn">Sign Up</button>
-            </a>
+            @if (Context.Session.GetInt32("IsLoggedIn") != 1)
+            {
+                <a class="nav-link text-dark" asp-area="" asp-page="/Login">
+                    <button class="animated-btn">Sign In</button>
+                </a>
+                <a class="nav-link text-dark" asp-area="" asp-page="/Register">
+                    <button class="animated-btn">Sign Up</button>
+                </a>
+            }
+            else{
+                <a class="nav-link text-dark" asp-area="" asp-page="/Index">
+                    <button class="animated-btn">Logout</button>
+                </a>
+            }
+           
         </div>
     </header>
     <div class="container">
