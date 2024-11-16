@@ -48,10 +48,8 @@ namespace Models.DataAccess
         #endregion
 
         #region Delete methods
-        public void DeleteUser(string name)
+        public void DeleteUser(int id)
         {
-            string idSql = "SELECT U_ID FROM USERS WHERE U_NAME = @name";
-            int id = dbAccess.GetId(idSql, "@name", name);
             string sql = "DELETE FROM USERS WHERE U_ID = @id";
             dbAccess.ExecuteNonQuery(sql, ("@id", id));
         }
@@ -79,7 +77,8 @@ namespace Models.DataAccess
                         UserModel user = new UserModel(
                             reader.GetInt32(0),
                             reader.GetString(1),
-                            reader.GetString(2)
+                            reader.GetString(2),
+                            reader.GetBoolean(3)
                         );
                         users.Add(user);
                     }
@@ -167,6 +166,22 @@ namespace Models.DataAccess
             if (emails.Contains(email))
             {
                 return true;
+            }
+            return false;
+        }
+
+        public bool IsAdmin(int? userId) {
+            if (userId == null) return false;
+            string sql = $"SELECT U_ISADMIN FROM USERS WHERE U_ID = {userId}";
+            using (var cmd = dbAccess.dbDataSource.CreateCommand(sql))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return reader.GetBoolean(0);
+                    }
+                }
             }
             return false;
         }

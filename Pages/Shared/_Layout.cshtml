@@ -36,6 +36,12 @@
                 </a>
             }
             else{
+                if(Context.Session.GetInt32("IsAdmin") == 1)
+                {
+                    <a class="nav-link text-dark" asp-area="" asp-page="/AdminView">
+                        <button class="animated-btn">Admin</button>
+                    </a>
+                }
                 <a class="nav-link text-dark" onclick="Logout()">
                     <button class="animated-btn">Logout</button>
                 </a>
@@ -69,7 +75,6 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
 
 <script>
     function Logout() {
