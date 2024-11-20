@@ -26,6 +26,8 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Release
 
 volumes:
   postgres-data: 

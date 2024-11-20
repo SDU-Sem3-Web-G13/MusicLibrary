@@ -13,6 +13,7 @@ namespace Models.DataAccess
         private string dbName { get; set; }
         private string port { get; set; }
         private string connectionString { get; set; }
+        private string servicename { get; set; }
         public NpgsqlDataSource dbDataSource { get; set; }
 
         public DbAccess()
@@ -24,7 +25,8 @@ namespace Models.DataAccess
             password = Env.GetString("POSTGRES_PASSWORD");
             dbName = Env.GetString("POSTGRES_DB");
             port = Env.GetString("POSTGRES_PORT");
-            connectionString = $"Host=localhost;Port={port};Database={dbName};User Id={user};Password={password};";
+            servicename = Env.GetString("SERVICE_NAME");
+            connectionString = $"Host={servicename};Port={port};Database={dbName};User Id={user};Password={password};";
             //connectionString = "Host=localhost;Port=5434;Database=docker;User Id=docker;Password=docker;";
 
             dbDataSource = NpgsqlDataSource.Create(connectionString);
