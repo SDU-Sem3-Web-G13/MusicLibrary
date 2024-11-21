@@ -401,6 +401,3 @@ FodyWeavers.xsd
 **/.env
 **/venv/
 Models/DataAccess/_Setup/user.sql
-
-**/**.pem
-**/certs/
