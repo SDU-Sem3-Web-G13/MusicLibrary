@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Models.DataAccess;
 using Models.Services;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Text;
 
@@ -27,26 +28,13 @@ public class RegisterModel : PageModel
 
     public void OnGet()
     {
+
     }
 
     public IActionResult OnPost()
     {
-       
-        // Checking if email already exists 
-        
-        if (_userRepository.EmailExists(User.Email)) 
-         {  
-            Debug.WriteLine("Email already exists.");
-            ErrorMessage = "Email already exists.";
-             return Page();
-         }
-
-
-        // Validate password
-        if (!IsValidPassword(User.Password))
+        if (!ModelState.IsValid)
         {
-            Debug.WriteLine("Password must be at least 8 characters");
-            ErrorMessage = "Password must be at least 8 characters long.";
             return Page();
         }
 

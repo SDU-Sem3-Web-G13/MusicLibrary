@@ -29,16 +29,12 @@ public class LoginModel : PageModel
 
     public void OnGet()
     {
-        // Initialization logic if needed
+        
     }
 
     public IActionResult OnPost()
     {
-        if (string.IsNullOrEmpty(User.Email) || string.IsNullOrEmpty(User.Password))
-        {
-            ErrorMessage = "Email and password are required.";
-            return Page();
-        }
+        if(!_userRepository.EmailExists(User.Email)) return Page();
 
         string emailHash = BCrypt.Net.BCrypt.HashPassword(User.Email, fixedSalt);
         string hashedEmailHex = userCredentialsService.ConvertToHex(emailHash);
@@ -56,10 +52,10 @@ public class LoginModel : PageModel
         }
         else
         {
-            ErrorMessage = "Invalid email or password.";
+            ErrorMessage = "Invalid password.";
         }
 
-        return Page(); // direct to album page
+        return Page(); 
     }
 
 }
