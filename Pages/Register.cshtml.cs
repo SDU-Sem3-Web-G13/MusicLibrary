@@ -33,11 +33,6 @@ public class RegisterModel : PageModel
 
     public IActionResult OnPost()
     {
-        if (!ModelState.IsValid)
-        {
-            return Page();
-        }
-
         try
         {
             string emailHash = BCrypt.Net.BCrypt.HashPassword(LoginUser.Email, FixedSalt);
