@@ -25,7 +25,12 @@ namespace Models.DataAccess
             password = Env.GetString("POSTGRES_PASSWORD");
             dbName = Env.GetString("POSTGRES_DB");
             port = Env.GetString("POSTGRES_PORT");
-            servicename = Env.GetString("SERVICE_NAME");
+
+            if(Env.GetString("ASPNETCORE_ENVIRONMENT") == "Release") {
+                servicename = Env.GetString("SERVICE_NAME");
+            } else {
+                servicename = "localhost";
+            }
             connectionString = $"Host={servicename};Port={port};Database={dbName};User Id={user};Password={password};";
             //connectionString = "Host=localhost;Port=5434;Database=docker;User Id=docker;Password=docker;";
 
