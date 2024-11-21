@@ -9,7 +9,7 @@ using System.Text;
 public class RegisterModel : PageModel
 {
     [BindProperty]
-    public User User { get; set; } = new User();
+    public LoginUser LoginUser { get; set; } = new LoginUser();
 
     [BindProperty]
     public string ErrorMessage { get; set; } = string.Empty;
@@ -40,13 +40,13 @@ public class RegisterModel : PageModel
 
         try
         {
-            string emailHash = BCrypt.Net.BCrypt.HashPassword(User.Email, FixedSalt);
-            string passwordHash = BCrypt.Net.BCrypt.HashPassword(User.Password, FixedSalt);
+            string emailHash = BCrypt.Net.BCrypt.HashPassword(LoginUser.Email, FixedSalt);
+            string passwordHash = BCrypt.Net.BCrypt.HashPassword(LoginUser.Password, FixedSalt);
 
             byte[] emailHashBytes = System.Text.Encoding.UTF8.GetBytes(emailHash);
             byte[] passwordHashBytes = System.Text.Encoding.UTF8.GetBytes(passwordHash);
 
-            _userRepository.AddUser(User.FirstName, User.Email);
+            _userRepository.AddUser(LoginUser.FirstName, LoginUser.Email);
             _userCredentialsService.AddUserCredentials(emailHashBytes, passwordHashBytes);
 
             return RedirectToPage("/Login"); // we can chage to which page we want to redirect

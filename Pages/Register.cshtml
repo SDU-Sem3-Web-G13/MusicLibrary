@@ -27,31 +27,31 @@
     <form method="post">
         <div class="form-container">
             <h2>Register</h2>
-            <div class="form-group">
-                <label asp-for="User.FirstName" class="control-label">Name</label>
-                <input asp-for="User.FirstName" class="form-control form-input" id="FirstName" placeholder="Enter your name" />
-                <span asp-validation-for="User.FirstName" class="text-danger"></span>
+            <div class="form-groLoginup">
+                <label asp-for="LoginUser.FirstName" class="control-label">Name</label>
+                <input asp-for="LoginUser.FirstName" class="form-control form-input" id="FirstName" placeholder="Enter your name" />
+                <span asp-validation-for="LoginUser.FirstName" class="text-danger"></span>
+            </div>
+            
+            <div class="form-groLoginup">
+                <label asp-for="LoginUser.Email" class="control-label">Email</label>
+                <input asp-for="LoginUser.Email" type="email" class="form-control form-input" id="Email" placeholder="Enter your email" />
+                <span asp-validation-for="LoginUser.Email" class="text-danger"></span>
             </div>
             
             <div class="form-group">
-                <label asp-for="User.Email" class="control-label">Email</label>
-                <input asp-for="User.Email" type="email" class="form-control form-input" id="Email" placeholder="Enter your email" />
-                <span asp-validation-for="User.Email" class="text-danger"></span>
-            </div>
-            
-            <div class="form-group">
-                <label asp-for="User.Password" class="control-label">Password</label>
-                <input asp-for="User.Password" type="password" class="form-control form-input" id="Password" placeholder="Enter your password" />
-                <span asp-validation-for="User.Password" class="text-danger"></span>
+                <label asp-for="LoginUser.Password" class="control-label">Password</label>
+                <input asp-for="LoginUser.Password" type="password" class="form-control form-input" id="Password" placeholder="Enter your password" />
+                <span asp-validation-for="LoginUser.Password" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="User.ConfirmPassword" class="control-label">Confirm Password</label>
-                <input asp-for="User.ConfirmPassword" type="password" class="form-control form-input" id="ConfirmPassword" placeholder="Confirm your password" />
-                <span asp-validation-for="User.ConfirmPassword" class="text-danger"></span>
+                <label asp-for="LoginUser.ConfirmPassword" class="control-label">Confirm Password</label>
+                <input asp-for="LoginUser.ConfirmPassword" type="password" class="form-control form-input" id="ConfirmPassword" placeholder="Confirm your password" />
+                <span asp-validation-for="LoginUser.ConfirmPassword" class="text-danger"></span>
             </div>
 
-            <input type="hidden" asp-for="User.SourcePage" value="RegistrationPage" />
+            <input type="hidden" asp-for="LoginUser.SourcePage" value="RegistrationPage" />
             
             <button style="margin-bottom: 10px;" type="submit" class="btn btn-primary submit-button">Register</button>
             <br />

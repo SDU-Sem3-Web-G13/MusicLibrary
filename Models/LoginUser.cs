@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 
-public class User
+public class LoginUser
 {
     [Required(ErrorMessage = "First name is required.")]
     public string FirstName { get; set; } = null!;
@@ -30,7 +30,7 @@ public class UniqueEmailAttribute : ValidationAttribute
     {
         var userRepository = validationContext.GetService(typeof(UserRepository)) as UserRepository;
         var email = value as string ?? "";
-        var user = validationContext.ObjectInstance as User;
+        var user = validationContext.ObjectInstance as LoginUser;
 
         if (user != null && userRepository != null) 
         {
