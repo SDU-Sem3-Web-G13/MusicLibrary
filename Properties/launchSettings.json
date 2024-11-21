@@ -16,7 +16,8 @@
       "launchBrowser": true,
       "applicationUrl": "https://localhost:443;http://localhost:80",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Release"
+        "ASPNETCORE_ENVIRONMENT": "Release",
+        "SERVICE_NAME": "localhost",
       }
     }
   }
