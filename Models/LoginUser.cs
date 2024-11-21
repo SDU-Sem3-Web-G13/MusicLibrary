@@ -44,6 +44,6 @@ public class UniqueEmailAttribute : ValidationAttribute
             }
         } 
 
-        return ValidationResult.Success ?? throw new NotImplementedException();
+        return ValidationResult.Success!;
     }
 }
