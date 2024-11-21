@@ -17,12 +17,18 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-        ClearSession();
+        
     }
 
     public void OnPost()
     {
         
+    }
+
+    public IActionResult OnGetLogout()
+    {
+        ClearSession();
+        return new JsonResult(new { success = true });
     }
 
     private void ClearSession()
