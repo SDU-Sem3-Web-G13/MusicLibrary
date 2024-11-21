@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 public class LoginModel : PageModel
 {
     [BindProperty]
-    public User User { get; set; } = new User(); 
+    public LoginUser LoginUser { get; set; } = new LoginUser(); 
 
     public string? ErrorMessage { get; set; } = null;
 
@@ -29,26 +29,22 @@ public class LoginModel : PageModel
 
     public void OnGet()
     {
-        // Initialization logic if needed
+        
     }
 
     public IActionResult OnPost()
     {
-        if (string.IsNullOrEmpty(User.Email) || string.IsNullOrEmpty(User.Password))
-        {
-            ErrorMessage = "Email and password are required.";
-            return Page();
-        }
+        if(!_userRepository.EmailExists(LoginUser.Email)) return Page();
 
-        string emailHash = BCrypt.Net.BCrypt.HashPassword(User.Email, fixedSalt);
+        string emailHash = BCrypt.Net.BCrypt.HashPassword(LoginUser.Email, fixedSalt);
         string hashedEmailHex = userCredentialsService.ConvertToHex(emailHash);
-        string passwordHash = BCrypt.Net.BCrypt.HashPassword(User.Password, fixedSalt);
+        string passwordHash = BCrypt.Net.BCrypt.HashPassword(LoginUser.Password, fixedSalt);
         string hashedPasswordHex = userCredentialsService.ConvertToHex(passwordHash);
 
         if (userCredentialsService.ValidateCredentials(hashedEmailHex, hashedPasswordHex))
         {
             HttpContext.Session.SetInt32("IsLoggedIn", 1);
-            var userId = _userRepository.GetUserId(User.Email);
+            var userId = _userRepository.GetUserId(LoginUser.Email);
             HttpContext.Session.SetInt32("userId", userId);
             HttpContext.Session.SetInt32("IsAdmin", _userRepository.IsAdmin(userId) ? 1 : 0);
             ErrorMessage = null;
@@ -56,10 +52,10 @@ public class LoginModel : PageModel
         }
         else
         {
-            ErrorMessage = "Invalid email or password.";
+            ErrorMessage = "Invalid password.";
         }
 
-        return Page(); // direct to album page
+        return Page(); 
     }
 
 }

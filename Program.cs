@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Models.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ builder.Services.AddMvc().AddRazorPagesOptions(o =>
             o.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()));
 builder.Services.AddSession();
 builder.Services.AddMemoryCache();
+builder.Services.AddScoped<UserRepository>();
 
 var app = builder.Build();
 
