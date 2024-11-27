@@ -79,9 +79,26 @@ namespace Models.DataAccess
             }
         }
 
-        
+        public int ExecuteScalar(string sql, params (string, object)[] parameters)
+        {
+            try
+            {
+                using (var cmd = dbDataSource.CreateCommand(sql))
+                {
+                    foreach (var (name, value) in parameters)
+                    {
+                        cmd.Parameters.AddWithValue(name, value);
+                    }
 
-
+                    return Convert.ToInt32(cmd.ExecuteScalar()); // Returns the result as an integer
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"An error occurred: {ex.Message}");
+                throw;
+            }
+        }
 
     }
 }

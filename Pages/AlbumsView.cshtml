@@ -49,10 +49,58 @@
         margin-top: 5px;
     }
 
+    .animated-btn {
+  background-color: #6a0dad;
+  color: #fff;
+  border: 2px solid #4b0082; 
+  padding: 10px 18px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 8px; 
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  height: 40px;
+  width: 100px;
+}
+
+.animated-btn:hover {
+  background-color: #4b0082;
+  color: #e0b3ff;
+  transform: scale(1.05);
+}
+
+.animated-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.animated-btn:hover::after {
+  opacity: 1;
+}
+
+.animated-btn:active {
+  transform: scale(0.98);
+}
+
+
 </style>
 
 <div class="container">
     <h1>Your Albums</h1>
+    <div>
+        <a class="nav-link text-dark" asp-area="" asp-page="/StatisticsView">
+            <button class="animated-btn" style="position: fixed; top: 100px; right: 50px;">Statistics</button>
+        </a>
+    </div>
     <br />
     <div class="row">
         @foreach (var album in Model.Albums)
