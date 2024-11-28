@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Models.DataAccess
 {
-    internal class AlbumRepository
+    public class AlbumRepository
     {
         private readonly DbAccess dbAccess;
 
@@ -103,6 +103,33 @@ namespace Models.DataAccess
                 }
             }
             throw new Exception("Album not found");
+        }
+        public (int totalAlbums, int totalArtists, int totalTracks, int totalGenres) GetStatistics()
+        {
+            string query = @"
+                SELECT 
+                    COUNT(*) AS totalAlbums, 
+                    COUNT(DISTINCT a_artist) AS totalArtists,
+                    SUM(array_length(a_tracks, 1)) AS totalTracks,
+                    COUNT(DISTINCT a_type) AS totalGenres
+                FROM albums";
+
+            using (var cmd = dbAccess.dbDataSource.CreateCommand(query))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return (
+                            reader.GetInt32(0),  // totalAlbums
+                            reader.GetInt32(1),  // totalArtists
+                            reader.IsDBNull(2) ? 0 : reader.GetInt32(2), // totalTracks
+                            reader.GetInt32(3)   // totalGenres
+                        );
+                    }
+                }
+            }
+            throw new Exception("Failed to retrieve statistics.");
         }
     }
 }

@@ -10,6 +10,7 @@ builder.Services.AddMvc().AddRazorPagesOptions(o =>
 builder.Services.AddSession();
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<AlbumRepository>();
 
 var app = builder.Build();
 
