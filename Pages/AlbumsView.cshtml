@@ -54,21 +54,33 @@
 <div class="container">
     <h1>Your Albums</h1>
     <br />
+    <form method="get">
+        <input type="text" name="SearchTerm" value="@Model.SearchTerm" placeholder="Search albums..." />
+        <button type="submit">Search</button>
+    </form>
     <div class="row">
-        @foreach (var album in Model.Albums)
+        @if (Model.Albums.Any())
         {
-            <div class="col-md-4">
-                <div class="card mb-4 shadow-sm rounded" onclick="showAlbumDetails('@album.Id')" style="cursor: pointer;">
-                    <div class="card-body">
-                        <div class="image-container">
-                            <img src="data:image/jpeg;base64,@album.GetCoverImageBase64()" class="card-img-top" alt="@album.AlbumName" />
+                    @foreach (var album in Model.Albums)
+                    {
+                        <div class="col-md-4">
+                            <div class="card mb-4 shadow-sm rounded" onclick="showAlbumDetails('@album.Id')" style="cursor: pointer;">
+                                <div class="card-body">
+                                    <div class="image-container">
+                                        <img src="data:image/jpeg;base64,@album.GetCoverImageBase64()" class="card-img-top" alt="@album.AlbumName" />
+                                    </div>
+                                    <strong><h4 class="card-title">@album.AlbumName</h4></strong>
+                                    <p class="card-text" style="color: gray; margin-top: -10px;">by @album.Artist</p>
+                                </div>
+                            </div>
                         </div>
-                        <strong><h4 class="card-title">@album.AlbumName</h4></strong>
-                        <p class="card-text" style="color: gray; margin-top: -10px;">by @album.Artist</p>
-                    </div>
-                </div>
-            </div>
+                    }
         }
+        else
+        {
+            <p>No albums found matching your search.</p>
+        }
+        
     </div>
 
     <button type="button" class="btn btn-primary" style="position: fixed; bottom: 100px; right: 50px;" onclick="event.stopPropagation(); showCreateModal()">
