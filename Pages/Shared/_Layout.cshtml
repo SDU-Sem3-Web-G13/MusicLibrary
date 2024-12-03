@@ -24,7 +24,11 @@
                 <a class="nav-link text-dark" asp-area="" asp-page="/About">About</a>
                 <a class="nav-link text-dark" asp-area="" asp-page="/FAQ">FAQ</a>
                 <a class="nav-link text-dark" asp-area="" asp-page="/Contact">Contact</a>
-            </nav>  
+                @if (Context.Session.GetInt32("IsLoggedIn") == 1)
+                {
+                <a class="nav-link text-dark" asp-area="" asp-page="/MusicPlayer">Music Player</a>
+                }
+        </nav>  
         <div class="nav-horizontal">
             @if (Context.Session.GetInt32("IsLoggedIn") != 1)
             {
