@@ -38,7 +38,14 @@ namespace RazorMusic.Pages
             var userId = HttpContext.Session.GetInt32("userId");
             var allAlbums = albumRepository.GetAlbums(userId ?? 0);
 
-            // Apply search filtering
+            Albums.AddRange(allAlbums);
+        }
+
+        public JsonResult OnGetFilteredAlbums(string SearchTerm)
+        {
+            var userId = HttpContext.Session.GetInt32("userId");
+            var allAlbums = albumRepository.GetAlbums(userId ?? 0);
+
             if (!string.IsNullOrEmpty(SearchTerm))
             {
                 allAlbums = allAlbums
@@ -46,7 +53,16 @@ namespace RazorMusic.Pages
                     .ToList();
             }
 
-            Albums.AddRange(allAlbums);
+            // Convert albums to a simplified JSON-friendly structure if necessary
+            var result = allAlbums.Select(album => new
+            {
+                Id = album.Id,
+                AlbumName = album.AlbumName,
+                Artist = album.Artist,
+                CoverImageBase64 = album.GetCoverImageBase64()
+            });
+
+            return new JsonResult(result);
         }
 
         public IActionResult OnGetGetAlbum(int albumId)

@@ -230,6 +230,45 @@
         }
     });
 
+    function reloadAlbums() {
+        const searchTerm = document.querySelector('input[name="SearchTerm"]').value;
+
+        fetch(`?handler=FilteredAlbums&searchTerm=${encodeURIComponent(searchTerm)}`)
+            .then(response => response.json())
+            .then(data => {
+                const albumContainer = document.querySelector('.row');
+                albumContainer.innerHTML = '';
+
+                if (data.length > 0) {
+                    data.forEach(album => {
+                        const albumHtml = `
+                                <div class="col-md-4">
+                                    <div class="card mb-4 shadow-sm rounded" onclick="showAlbumDetails('${album.id}')" style="cursor: pointer;">
+                                        <div class="card-body">
+                                            <div class="image-container">
+                                                <img src="data:image/jpeg;base64,${album.coverImageBase64}" class="card-img-top" alt="${album.albumName}" />
+                                            </div>
+                                            <strong><h4 class="card-title">${album.albumName}</h4></strong>
+                                            <p class="card-text" style="color: gray; margin-top: -10px;">by ${album.artist}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                        albumContainer.innerHTML += albumHtml;
+                    });
+                } else {
+                    albumContainer.innerHTML = '<p>No albums found matching your search.</p>';
+                }
+            })
+            .catch(error => console.error('Error fetching albums:', error));
+    }
+
+    // Attach to form submit
+    document.querySelector('form[method="get"]').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent full page reload
+        reloadAlbums(); // Perform AJAX call
+    });
+
     function validateAlbumForm() {
         var isValid = true;
 
