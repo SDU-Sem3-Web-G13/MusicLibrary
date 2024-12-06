@@ -26,7 +26,8 @@ CREATE TABLE ALBUMS (
     A_ARTIST VARCHAR(50) NOT NULL,
     A_TYPE VARCHAR(15) NOT NULL,
     A_DESC TEXT,
-    A_TRACKS VARCHAR(50)[] NOT NULL -- Array of track names
+    A_TRACKS VARCHAR(50)[] NOT NULL, -- Array of track names
+    A_ISFAVOURITE BOOL DEFAULT FALSE
 );
 
 -- Album Constraints
