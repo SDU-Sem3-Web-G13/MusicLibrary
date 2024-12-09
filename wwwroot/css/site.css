@@ -50,3 +50,24 @@ body {
     color: #000000;
     padding: 5px;
 }
+
+
+
+/* LOGIN AND REGISTER PAGE */
+
+.login-container .form-input {
+  margin-bottom: 10px;
+}
+.login-container .submit-button {
+  margin-top: 10px;
+}
+.login-container .form-container {
+  min-width: 400px; 
+  align-items: center;
+}
+.login-container .form-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}

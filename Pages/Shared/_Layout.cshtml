@@ -75,23 +75,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-<script>
-    function Logout() {
-        $.ajax({
-            url: '/Index?handler=Logout',
-            type: 'GET',
-            async: false,
-            success: function(response) {
-                if (response.success) {
-                    window.location.href = '/Login';
-                } else {
-                    console.error('Failed to logout');
-                }
-            },
-            error: function() {
-                console.error('Error in AJAX request');
-            }
-        });
-    }
-</script>

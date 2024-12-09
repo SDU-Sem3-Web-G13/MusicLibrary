@@ -4,146 +4,84 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<main>
-    <div>
-        <nav class="nav-links">
-            <a href="#TopGenres&Styles">Top Genres & Styles</a>
-            <a href="#NewReleases">New Releases</a>
-            <a href="#Genres&Moods">Genres & Moods</a>
-            <a href="#Connect">Connect with us</a>
-        </nav>
-    </div>
 
-    <section id="TopGenres&Styles">
-        <div>
-            <h1>Top Genres & Styles</h1>
-            <p>Explore a diverse world of music genres and styles right at your fingertips. 
-            From classic rock to indie pop, electronic beats to soulful blues, we have a variety of 
-            music to suit every taste and mood. With genres organized for easy discovery, you can dive 
-            deep into your favorites or venture into new musical realms. Let RazorMusic help you find the 
-            perfect soundtrack for any occasion and mood—whether you’re relaxing, working, or gearing up for a 
-            night out. Experience the joy of discovering new sounds and connecting with music you’ll love.</p>
-        </div>
-        <div>
-            <img src="first_image.jpg" alt="TopGenres&Styles">
-        </div>
-    </section>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RazorMusic</title>
+    <link rel="stylesheet" href="~/css/Index.css" />
+</head>
 
-    <section id="NewReleases">
+<body>
+    <main>
         <div>
-            <img src="second_image.jpg" alt="NewReleases">
+            <nav class="nav-links">
+                <a href="#TopGenres&Styles">Top Genres & Styles</a>
+                <a href="#NewReleases">New Releases</a>
+                <a href="#Genres&Moods">Genres & Moods</a>
+                <a href="#Connect">Connect with us</a>
+            </nav>
         </div>
-        <div>
-            <h1>New Releases</h1>
-            <p>Stay up-to-date with the latest and greatest hits on RazorMusic! Our New Releases section features the freshest music as soon as it drops, ensuring you’re always in the loop on what’s trending. Dive into recently released albums, singles, and EPs from both emerging artists and top-charting musicians. Discover groundbreaking music across every genre, and be the first to enjoy the sounds that are shaping the future of music. RazorMusic brings you a curated selection of the newest tracks so you can keep your playlists exciting and current.</p>
-        </div>
-    </section>
 
-    <section id="Genres&Moods">
-        <div>
-            <h1>Genres & Moods</h1>
-            <p>Find music that matches your mood and vibe. Our Genres & Moods section is crafted to help you discover tracks based on your emotions or the atmosphere you’re creating. Whether you’re looking for upbeat tunes to energize your day, chill vibes for winding down, or introspective sounds for a quiet moment, we’ve got you covered. Choose from a variety of playlists designed to set the tone for any activity or mood, helping you connect with the perfect sounds for every moment of your day.</p>
-        </div>
-        <div>
-            <img src="third_image.jpg" alt="Genres&Moods">
-        </div>
-    </section>
-
-    <section id="Connect">
-                <div>
-                <img src="fourth_image.jpg" alt="Contact Us">
+        <section id="TopGenres&Styles">
+            <div>
+                <h1>Top Genres & Styles</h1>
+                <p>Explore a diverse world of music genres and styles right at your fingertips. 
+                From classic rock to indie pop, electronic beats to soulful blues, we have a variety of 
+                music to suit every taste and mood. With genres organized for easy discovery, you can dive 
+                deep into your favorites or venture into new musical realms. Let RazorMusic help you find the 
+                perfect soundtrack for any occasion and mood—whether you’re relaxing, working, or gearing up for a 
+                night out. Experience the joy of discovering new sounds and connecting with music you’ll love.</p>
             </div>
             <div>
-                <h1>Contact Us</h1>
-                <p>If you have any questions or need further information, please feel free to reach out to us with: <a asp-area="" asp-page="/Contact"><strong>Contact</strong></a>.</p>
-            <h2>Connect with Us</h2>
-            <div class="contact-icons">
-                <a href="https://www.facebook.com/razormusic" target="_blank">
-                    <img src="Facebook_Logo_2023.png" alt="Facebook" title="Facebook">
-                </a>
-                <a href="mailto:info@razormusic.com">
-                    <img src="email_logo.webp" alt="Email" title="Email">
-                </a>
-                <a href="https://www.linkedin.com/company/razormusic" target="_blank">
-                    <img src="linkedin_logo.webp" alt="LinkedIn" title="LinkedIn">
-                </a>
-                <a href="tel:+4595358745">
-                    <img src="phone_logo.png" alt="Phone" title="Phone">
-                </a>
+                <img src="first_image.jpg" alt="TopGenres&Styles">
             </div>
-        </div>
-    </section>
-</main>
+        </section>
 
-<style>
-    main section {
-        display: flex;
-        flex-direction: row;
-        margin: 40px 0;
-    }
+        <section id="NewReleases">
+            <div>
+                <img src="second_image.jpg" alt="NewReleases">
+            </div>
+            <div>
+                <h1>New Releases</h1>
+                <p>Stay up-to-date with the latest and greatest hits on RazorMusic! Our New Releases section features the freshest music as soon as it drops, ensuring you’re always in the loop on what’s trending. Dive into recently released albums, singles, and EPs from both emerging artists and top-charting musicians. Discover groundbreaking music across every genre, and be the first to enjoy the sounds that are shaping the future of music. RazorMusic brings you a curated selection of the newest tracks so you can keep your playlists exciting and current.</p>
+            </div>
+        </section>
 
-    main section img {
-        width: 300px;
-        height: 300px;
-        border-radius: 50%;
-    }
+        <section id="Genres&Moods">
+            <div>
+                <h1>Genres & Moods</h1>
+                <p>Find music that matches your mood and vibe. Our Genres & Moods section is crafted to help you discover tracks based on your emotions or the atmosphere you’re creating. Whether you’re looking for upbeat tunes to energize your day, chill vibes for winding down, or introspective sounds for a quiet moment, we’ve got you covered. Choose from a variety of playlists designed to set the tone for any activity or mood, helping you connect with the perfect sounds for every moment of your day.</p>
+            </div>
+            <div>
+                <img src="third_image.jpg" alt="Genres&Moods">
+            </div>
+        </section>
 
-    main section img:hover {
-        transform: scale(1.1);
-        transition: transform 0.5s;
-    }
-
-    main section div {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        margin-left: 50px;
-    }
-            
-    .contact-icons {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-    }
-
-    .contact-icons img {
-        margin-top: 20px;
-        margin-right: 24px;
-        width: 40px;
-        height: 40px;
-        cursor: pointer;
-    }
-
-    main nav {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        margin: 20px 0;
-    }
-
-    .nav-links a {
-        position: relative;
-        color: #333;
-        text-decoration: none; 
-        padding: 5px 0;
-        font-weight: bold;
-    }
-
-    .nav-links a::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: 2px; 
-        background-color: #000; 
-        transform: scaleX(0);
-        transform-origin: bottom right;
-        transition: transform 0.3s ease;
-    }
-
-    .nav-links a:hover::after {
-        transform: scaleX(1);
-        transform-origin: bottom left;
-    }
-</style>
+        <section id="Connect">
+                    <div>
+                    <img src="fourth_image.jpg" alt="Contact Us">
+                </div>
+                <div>
+                    <h1>Contact Us</h1>
+                    <p>If you have any questions or need further information, please feel free to reach out to us with: <a asp-area="" asp-page="/Contact"><strong>Contact</strong></a>.</p>
+                <h2>Connect with Us</h2>
+                <div class="contact-icons">
+                    <a href="https://www.facebook.com/razormusic" target="_blank">
+                        <img src="Facebook_Logo_2023.png" alt="Facebook" title="Facebook">
+                    </a>
+                    <a href="mailto:info@razormusic.com">
+                        <img src="email_logo.webp" alt="Email" title="Email">
+                    </a>
+                    <a href="https://www.linkedin.com/company/razormusic" target="_blank">
+                        <img src="linkedin_logo.webp" alt="LinkedIn" title="LinkedIn">
+                    </a>
+                    <a href="tel:+4595358745">
+                        <img src="phone_logo.png" alt="Phone" title="Phone">
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
