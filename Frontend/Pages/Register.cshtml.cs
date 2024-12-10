@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Backend.DataAccess;
-using Backend.Services;
 using Backend.Models;
 using System.Diagnostics;
-using System.Text;
 
-public class RegisterModel : PageModel
+using Frontend.Models;
+
+public class RegisterViewModel : PageModel
 {
     [BindProperty]
     public LoginUser LoginUser { get; set; } = new LoginUser();
@@ -14,21 +13,13 @@ public class RegisterModel : PageModel
     [BindProperty]
     public string ErrorMessage { get; set; } = string.Empty;
 
-    private readonly UserRepository _userRepository;
-    private readonly UserCredentialsService _userCredentialsService;
+    private readonly LoginRegisterModel model = new LoginRegisterModel();
 
     private readonly string FixedSalt;
 
-    public RegisterModel()
+    public RegisterViewModel()
     {
-        _userRepository = new UserRepository();
-        _userCredentialsService = new UserCredentialsService();
-        FixedSalt = _userCredentialsService.GetFixedSalt();
-    }
-
-    public void OnGet()
-    {
-
+        FixedSalt = model.GetFixedSalt();
     }
 
     public IActionResult OnPost()
@@ -41,30 +32,21 @@ public class RegisterModel : PageModel
             byte[] emailHashBytes = System.Text.Encoding.UTF8.GetBytes(emailHash);
             byte[] passwordHashBytes = System.Text.Encoding.UTF8.GetBytes(passwordHash);
 
-            _userRepository.AddUser(LoginUser.FirstName, LoginUser.Email);
-            _userCredentialsService.AddUserCredentials(emailHashBytes, passwordHashBytes);
+            model.AddUser(LoginUser.FirstName, LoginUser.Email);
+            model.AddUserCredentials(emailHashBytes, passwordHashBytes);
 
-            return RedirectToPage("/Login"); // we can chage to which page we want to redirect
+            HttpContext.Session.SetInt32("IsLoggedIn", 1);
+            var userId = model.GetUserId(LoginUser.Email);
+            HttpContext.Session.SetInt32("userId", userId);
+            HttpContext.Session.SetInt32("IsAdmin", model.IsAdmin(userId) ? 1 : 0);
+
+            LoginUser = new LoginUser();
+            return RedirectToPage("AlbumsView");
         }
         catch(Exception e)
         {
             Debug.WriteLine(e.Message);
-            
         }
         return Page();
-
-    }
-
-    private bool IsValidPassword(string password)
-    {
-        return password.Length >= 8; 
-    }
-
-    private byte[] HashPassword(string password)
-    {
-        using (var sha256 = System.Security.Cryptography.SHA256.Create())
-        {
-            return sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
-        }
     }
 }

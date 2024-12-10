@@ -1,58 +1,46 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Backend.DataAccess;
-using Backend.Services;
 using Backend.Models;
-using Microsoft.AspNetCore.Http;
+using Frontend.Models;
 
-public class LoginModel : PageModel
+public class LoginViewModel : PageModel
 {
     [BindProperty]
     public LoginUser LoginUser { get; set; } = new LoginUser(); 
 
     public string? ErrorMessage { get; set; } = null;
 
-    [BindProperty]
-    public string? Email { get; set; }
-    [BindProperty]
-    public string? Password { get; set; }
-
-    private readonly UserRepository _userRepository;
-    private readonly UserCredentialsService userCredentialsService;
+    private readonly LoginRegisterModel model = new LoginRegisterModel();
     private readonly string fixedSalt;
 
-    public LoginModel()
+    public LoginViewModel()
     {
-        _userRepository = new UserRepository();
-        userCredentialsService = new UserCredentialsService();
-        fixedSalt = userCredentialsService.GetFixedSalt();
-    }
-
-    public void OnGet()
-    {
-        
+        fixedSalt = model.GetFixedSalt();
     }
 
     public IActionResult OnPost()
     {
-        if(!_userRepository.EmailExists(LoginUser.Email)) return Page();
+        if(!model.EmailExists(LoginUser.Email)) return Page();
 
         string emailHash = BCrypt.Net.BCrypt.HashPassword(LoginUser.Email, fixedSalt);
-        string hashedEmailHex = userCredentialsService.ConvertToHex(emailHash);
+        string hashedEmailHex = model.ConvertToHex(emailHash);
         string passwordHash = BCrypt.Net.BCrypt.HashPassword(LoginUser.Password, fixedSalt);
-        string hashedPasswordHex = userCredentialsService.ConvertToHex(passwordHash);
+        string hashedPasswordHex = model.ConvertToHex(passwordHash);
 
-        if (userCredentialsService.ValidateCredentials(hashedEmailHex, hashedPasswordHex))
+        if (model.ValidateCredentials(hashedEmailHex, hashedPasswordHex))
         {
             HttpContext.Session.SetInt32("IsLoggedIn", 1);
-            var userId = _userRepository.GetUserId(LoginUser.Email);
+            var userId = model.GetUserId(LoginUser.Email);
             HttpContext.Session.SetInt32("userId", userId);
-            HttpContext.Session.SetInt32("IsAdmin", _userRepository.IsAdmin(userId) ? 1 : 0);
+            HttpContext.Session.SetInt32("IsAdmin", model.IsAdmin(userId) ? 1 : 0);
             ErrorMessage = null;
+
+            LoginUser = new LoginUser();
             return RedirectToPage("AlbumsView");
         }
         else
         {
+            LoginUser = new LoginUser();
             ErrorMessage = "Invalid password.";
         }
 
