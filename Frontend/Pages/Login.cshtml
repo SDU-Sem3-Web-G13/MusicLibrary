@@ -1,0 +1,52 @@
+@page
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="form-wrapper">
+            <form method="post">
+                <h2>Login</h2>
+                <div class="form-container">
+                    <div class="form-group">
+                        <label asp-for="LoginUser.Email" class="control-label">Email</label>
+                        <input asp-for="LoginUser.Email" class="form-control form-input" id="Email" placeholder="Enter your email" />
+                        <span asp-validation-for="LoginUser.Email" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="LoginUser.Password" class="control-label">Password</label>
+                        <input asp-for="LoginUser.Password" type="password" class="form-control form-input" id="Password" placeholder="Enter your password" />
+                        <span asp-validation-for="LoginUser.Password" class="text-danger"></span>
+                    </div>
+
+                    @if (Model.ErrorMessage != null)
+                    {
+                        <div class="alert alert-danger" role="alert" style="margin-top: 10px">
+                            @Model.ErrorMessage
+                        </div>
+                    }
+
+                    <input type="hidden" asp-for="LoginUser.SourcePage" value="LoginPage" />
+
+                    <button style="margin-bottom: 10px;" type="submit" class="btn btn-primary submit-button">Login</button>
+                    <br />
+                    Don't have an account? Click <a asp-page="/Register">here</a> to register.
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

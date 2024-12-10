@@ -1,0 +1,57 @@
+@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="form-wrapper">
+            <form method="post">
+                <div class="form-container">
+                    <h2>Register</h2>
+                    <div class="form-groLoginup">
+                        <label asp-for="LoginUser.FirstName" class="control-label">Name</label>
+                        <input asp-for="LoginUser.FirstName" class="form-control form-input" id="FirstName" placeholder="Enter your name" />
+                        <span asp-validation-for="LoginUser.FirstName" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-groLoginup">
+                        <label asp-for="LoginUser.Email" class="control-label">Email</label>
+                        <input asp-for="LoginUser.Email" type="email" class="form-control form-input" id="Email" placeholder="Enter your email" />
+                        <span asp-validation-for="LoginUser.Email" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="LoginUser.Password" class="control-label">Password</label>
+                        <input asp-for="LoginUser.Password" type="password" class="form-control form-input" id="Password" placeholder="Enter your password" />
+                        <span asp-validation-for="LoginUser.Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="LoginUser.ConfirmPassword" class="control-label">Confirm Password</label>
+                        <input asp-for="LoginUser.ConfirmPassword" type="password" class="form-control form-input" id="ConfirmPassword" placeholder="Confirm your password" />
+                        <span asp-validation-for="LoginUser.ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <input type="hidden" asp-for="LoginUser.SourcePage" value="RegistrationPage" />
+                    
+                    <button style="margin-bottom: 10px;" type="submit" class="btn btn-primary submit-button">Register</button>
+                    <br />
+                    Already have an account? Click <a asp-page="/Login">here</a> to log in.
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");} 
+}

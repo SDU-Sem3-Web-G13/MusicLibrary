@@ -1,0 +1,167 @@
+﻿@page
+@model RazorMusic.Pages.AlbumsViewModel
+@using Backend.Models
+@using System
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Albums</title>
+    <link rel="stylesheet" href="~/css/AlbumsView.css" />
+    <script src="~/js/AlbumsView.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Your Albums</h1>
+        <br />
+        <div class="row">
+            @foreach (var album in Model.Albums)
+            {
+                <div class="col-md-4">
+                    <div class="card mb-4 shadow-sm rounded" onclick="showAlbumDetails('@album.Id')" style="cursor: pointer;">
+                        <div class="card-body">
+                            <div class="image-container">
+                                <img src="data:image/jpeg;base64,@album.GetCoverImageBase64()" class="card-img-top" alt="@album.AlbumName" />
+                            </div>
+                            <strong><h4 class="card-title">@album.AlbumName</h4></strong>
+                            <p class="card-text" style="color: gray; margin-top: -10px;">by @album.Artist</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <button type="button" class="btn btn-primary" style="position: fixed; bottom: 100px; right: 50px;" onclick="event.stopPropagation(); showCreateModal()">
+            Add Album
+        </button>
+    </div>
+
+    <!-- Album Detail Modal -->
+    <div class="modal" id="detailModal" tabindex="-1" role="dialog" daa-album-itemid="">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header d-flex align-items-center">
+                    <h5 class="modal-title" id="album-name"></h5>
+                    <p class="ml-2 mb-0" style="color: gray;"><span id="details-artist"></span></p>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-7" style="max-height: 400px; overflow-y: auto;">
+                            <p><strong>Release Date</strong> <br /> <span id="details-releaseDate"></span></p>
+                            <p><strong>Type</strong> <br /> <span id="details-albumType"></span></p>
+                            <p><strong>Description</strong> <br /> <span id="details-description"></span></p>
+                            <p><strong>Tracks</strong> <br /> </p>
+                            <ul id="details-tracksList"></ul>
+                        </div>
+                        <div class="col-md-5 text-center">
+                            <div style="width: 100%; height: 300px; overflow: hidden;">
+                                <img id="details-coverImage" src="#" alt="Cover Image" style="width: 100%; height: 100%; object-fit: contain;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                    <div>
+                        <button type="button" class="btn btn-primary" onclick="event.stopPropagation(); showEditModal()">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="btn btn-danger" onclick="event.stopPropagation(); showDeleteModal()">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </div>
+                    <button type="button" class="btn btn-secondary" id="closeDetailsButton">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Delete Album Modal -->
+    <div class="modal" id="deleteModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this album?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelDeleteButton">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Album Modal -->
+    <div class="modal" id="createModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: auto;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createModalTitle">Create Album</h5>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data" id="createAlbumForm">
+                        <div class="form-group">
+                            <div class="album-input">
+                                <label for="albumName">Album Name</label>
+                                <input type="text" class="form-control" id="albumName" name="albumName" required />
+                                <div id="albumNameError" class="error-message"></div>
+                            </div>
+                            <div class="album-input">
+                                <label for="albumReleaseDate">Release Date</label>
+                                <input type="date" class="form-control" id="albumReleaseDate" name="albumReleaseDate" />
+                                <div id="albumReleaseDateError" class="error-message"></div>
+                            </div>
+
+                            <div class="album-input">
+                                <label for="albumArtist">Artist</label>
+                                <input type="text" class="form-control" id="albumArtist" name="albumArtist" />
+                                <div id="albumArtistError" class="error-message"></div>
+                            </div>
+
+                            <div class="album-input">
+                                <label for="albumType">Type</label>
+                                <select class="form-control" id="albumType" name="albumType">
+                                    <option value="Single">Single</option>
+                                    <option value="EP">EP</option>
+                                    <option value="LP">LP</option>
+                                </select>
+                                <div id="albumTypeError" class="error-message"></div>
+                            </div>
+
+                            <div class="album-input">
+                                <label for="albumDescription">Description</label>
+                                <textarea class="form-control" id="albumDescription" name="albumDescription"></textarea>
+                                <div id="albumDescriptionError" class="error-message"></div>
+                            </div>
+
+                            <div class="album-input">
+                                <label for="albumTracks">Tracks</label>
+                                <div id="tracksContainer"></div>
+                                <button type="button" class="btn btn-secondary" id="addTrackButton" onclick="addNewTrackInput()">Add Track</button>
+                                <div id="albumTracksError" class="error-message"></div>
+                            </div>
+
+                            <div class="album-input">
+                                <label for="albumCoverImage">Cover Image</label>
+                                <input type="file" class="form-control" id="albumCoverImage" name="albumCoverImage" accept="image/png, image/jpeg" onchange="displayImage(this)" />
+                                <small id="fileSizeLimit" class="form-text text-muted">Maximum file size: 4mb</small>
+                                <div id="albumCoverImageError" class="error-message"></div>
+                            </div>
+
+                            <img id="coverImagePreview" src="#" alt="Cover Image" style="display: none; width: 100%; height: auto;" />
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelCreateButton">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="confirmCreateButton">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
