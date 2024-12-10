@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorMusic", "RazorMusic.csproj", "{8ACCA1E3-E109-4633-B5BB-A674B2C63B4F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorMusic", "Frontend\RazorMusic.csproj", "{D1770A65-1657-4722-830C-8BB1EE7B5082}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{42D45ACC-20E5-457D-A356-509B57D432BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -14,9 +16,13 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8ACCA1E3-E109-4633-B5BB-A674B2C63B4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8ACCA1E3-E109-4633-B5BB-A674B2C63B4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8ACCA1E3-E109-4633-B5BB-A674B2C63B4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8ACCA1E3-E109-4633-B5BB-A674B2C63B4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D1770A65-1657-4722-830C-8BB1EE7B5082}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D1770A65-1657-4722-830C-8BB1EE7B5082}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D1770A65-1657-4722-830C-8BB1EE7B5082}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D1770A65-1657-4722-830C-8BB1EE7B5082}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42D45ACC-20E5-457D-A356-509B57D432BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42D45ACC-20E5-457D-A356-509B57D432BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42D45ACC-20E5-457D-A356-509B57D432BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42D45ACC-20E5-457D-A356-509B57D432BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
