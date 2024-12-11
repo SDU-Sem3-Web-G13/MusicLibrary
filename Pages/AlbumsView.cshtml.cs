@@ -49,6 +49,11 @@ namespace RazorMusic.Pages
             return new JsonResult(new { success = true });
         }
 
+        public IActionResult OnGetToggleLikeAlbum(int albumId) {
+            albumRepository.ToggleLikeAlbum(albumId);
+            return new JsonResult(new { success = true });
+        }
+
         public IActionResult OnGetClearInputAlbum() {
             InputAlbum = new AlbumInputModel();
             return new JsonResult(new { success = true });

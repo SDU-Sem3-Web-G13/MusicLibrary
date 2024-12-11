@@ -23,6 +23,12 @@ namespace Models.DataAccess
             dbAccess.ExecuteNonQuery(sql, ("@owner", owner), ("@cover", cover), ("@albumName", albumName), ("@releaseDate", releaseDate), ("@artist", artist), ("@type", type), ("@description", description), ("@tracks", tracks));
         }
 
+        public void ToggleLikeAlbum(int id)
+        {
+            string sql = "UPDATE albums SET a_isfavourite = NOT a_isfavourite WHERE a_id=@id";
+            dbAccess.ExecuteNonQuery(sql,("@id",id));
+        }
+
         public void DeleteAlbum(int id)
         {
             string sql = "DELETE FROM albums WHERE a_id = @id";
@@ -65,7 +71,8 @@ namespace Models.DataAccess
                             reader.GetString(5),
                             reader.GetString(6),
                             reader.GetString(7),
-                            reader.GetFieldValue<string[]>(8)
+                            reader.GetFieldValue<string[]>(8),
+                            reader.GetBoolean(9)
                         );
                         album.Id = reader.GetInt32(0);
                         album.CoverImage = reader.GetFieldValue<byte[]>(2);
@@ -92,7 +99,8 @@ namespace Models.DataAccess
                             reader.GetString(5),
                             reader.GetString(6),
                             reader.GetString(7),
-                            reader.GetFieldValue<string[]>(8)
+                            reader.GetFieldValue<string[]>(8),
+                            reader.GetBoolean(9)
                             
                         );
                         album.Id = reader.GetInt32(0);

@@ -49,6 +49,17 @@
         margin-top: 5px;
     }
 
+    .like-button{
+        background: none;
+        border:none;
+        cursor:pointer;
+        color: gray;
+        font-size: 24px;
+    }
+
+    .like-button.liked{
+        color: red;
+    }
 </style>
 
 <div class="container">
@@ -65,6 +76,7 @@
                         </div>
                         <strong><h4 class="card-title">@album.AlbumName</h4></strong>
                         <p class="card-text" style="color: gray; margin-top: -10px;">by @album.Artist</p>
+                        <i class="like-button fas fa-heart @(album.IsFavourite ? "liked" : "")"></i>
                     </div>
                 </div>
             </div>
@@ -102,6 +114,8 @@
             </div>
             <div class="modal-footer d-flex justify-content-between">
                 <div>
+                    <button id='toggleButton' class="btn like-button" onclick="toggleLike(this);">
+                        <i class="fas fa-heart" ></i></button>
                     <button type="button" class="btn btn-primary" onclick="event.stopPropagation(); showEditModal()">
                         <i class="fas fa-edit"></i> Edit
                     </button>
@@ -274,6 +288,18 @@
         document.getElementById('details-description').innerText = album.description;
         document.getElementById('details-artist').innerText = album.artist;
         var closeDetailsButton = document.getElementById('closeDetailsButton');
+
+        var toggleButton = document.getElementById('toggleButton');
+        if(album.isFavourite) {
+            if(!toggleButton.classList.contains('liked')) {
+                toggleButton.classList.toggle('liked');
+            } 
+        }
+        else {
+            if(toggleButton.classList.contains('liked')) {
+                toggleButton.classList.toggle('liked');
+            }
+        }
 
         const tracksList = document.getElementById('details-tracksList');
         tracksList.innerHTML = '';
@@ -571,5 +597,26 @@
         newTrackInput.appendChild(deleteButton);
 
         document.getElementById('tracksContainer').appendChild(newTrackInput);
+    }
+
+    function toggleLike(button){
+        var albumId = document.getElementById('detailModal').getAttribute('data-album-id');
+        fetch(`?handler=toggleLikeAlbum&albumId=${albumId}`)
+        .then(response => {
+            debugger;
+            var album = getAlbum(albumId);
+            if(album.isFavourite) {
+                if(!button.classList.contains('liked')) {
+                    button.classList.toggle('liked');
+                } 
+            }
+            else {
+                if(button.classList.contains('liked')) {
+                    button.classList.toggle('liked');
+                }
+            }
+            location.reload();
+        })
+        .catch(error => console.error('Error:', error));
     }
 </script>

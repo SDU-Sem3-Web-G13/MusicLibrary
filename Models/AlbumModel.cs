@@ -13,6 +13,7 @@ namespace Models
         public string AlbumType { get; set; }
         public string Description { get; set; }
         public string[] Tracks { get; set; } 
+        public bool IsFavourite { get; set; }
 
         public AlbumModel(
             string albumName,
@@ -20,7 +21,8 @@ namespace Models
             string artist,
             string albumType,
             string description,
-            string[] tracks
+            string[] tracks,
+            bool isFavourite
         ) {
             this.AlbumName = albumName;
             this.ReleaseDate = releaseDate;
@@ -28,6 +30,7 @@ namespace Models
             this.AlbumType = albumType;
             this.Description = description;
             this.Tracks = tracks;
+            this.IsFavourite = isFavourite;
         }
 
         public string GetCoverImageBase64()
