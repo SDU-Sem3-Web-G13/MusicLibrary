@@ -15,10 +15,17 @@ namespace RazorMusic.Pages
         [BindProperty]
         public AlbumInputModel InputAlbum { get; set; } = null!;
 
+        [BindProperty(SupportsGet = true)]
+        public string OrderByVariable { get; set; } = "Tittle";
+
+        [BindProperty(SupportsGet = true)]
+        public string OrderBy { get; set; } = "Ascending";
+
         public void OnGet()
         {
             ValidateSessionStorage();
             GetUserAlbums();
+            SortAlbums();
         }
 
 
@@ -97,6 +104,28 @@ namespace RazorMusic.Pages
 
             var base64Image = Convert.ToBase64String(album.CoverImage);
             return new JsonResult(new { success = true, coverImage = base64Image });
+        }
+
+        private void SortAlbums()
+        {
+            switch (OrderByVariable)
+            {
+                case "Tittle":
+                    Albums = OrderBy == "Ascending"
+                        ? Albums.OrderBy(a => a.AlbumName).ToList()
+                        : Albums.OrderByDescending(a => a.AlbumName).ToList();
+                    break;
+                case "Author":
+                    Albums = OrderBy == "Ascending"
+                        ? Albums.OrderBy(a => a.Artist).ToList()
+                        : Albums.OrderByDescending(a => a.Artist).ToList();
+                    break;
+                case "ReleaseDate":
+                    Albums = OrderBy == "Ascending"
+                        ? Albums.OrderBy(a => a.ReleaseDate).ToList()
+                        : Albums.OrderByDescending(a => a.ReleaseDate).ToList();
+                    break;
+            }
         }
     }
 

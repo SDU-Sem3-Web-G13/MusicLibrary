@@ -54,6 +54,20 @@
 <div class="container">
     <h1>Your Albums</h1>
     <br />
+    <h2>Order by</h2>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" style="display: flex; gap: 10px">
+        <select name="orderByVariable" id="orderByVariable" class="form-select">
+            <option value="Tittle" selected="@(Model.OrderByVariable == "Tittle")">Tittle</option>
+            <option value="Author" selected="@(Model.OrderByVariable == "Author")">Author</option>
+            <option value="ReleaseDate" selected="@(Model.OrderByVariable == "ReleaseDate")">Release Date</option>
+        </select>
+        <select name="orderBy" id="descAsc" class="form-select">
+            <option value="Descending" selected="@(Model.OrderBy == "Descending")">Descending</option>
+            <option value="Ascending" selected="@(Model.OrderBy == "Ascending")">Ascending</option>
+        </select>
+        <button type="button" class="btn btn-primary" onclick="sortAlbums()">Sort</button>
+    </nav>
+    <br />
     <div class="row">
         @foreach (var album in Model.Albums)
         {
@@ -217,6 +231,14 @@
             }
         }
     });
+
+    function sortAlbums() {
+    var orderByVariable = document.getElementById('orderByVariable').value;
+    var orderBy = document.getElementById('descAsc').value;
+    
+    window.location.href = `?handler=Index&OrderByVariable=${orderByVariable}&OrderBy=${orderBy}`;
+    }
+
 
     function validateAlbumForm() {
         var isValid = true;
