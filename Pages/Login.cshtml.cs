@@ -48,6 +48,7 @@ public class LoginModel : PageModel
             HttpContext.Session.SetInt32("userId", userId);
             HttpContext.Session.SetInt32("IsAdmin", _userRepository.IsAdmin(userId) ? 1 : 0);
             ErrorMessage = null;
+            HttpContext.Session.SetString("userPassword", LoginUser.Password);
             return RedirectToPage("AlbumsView");
         }
         else

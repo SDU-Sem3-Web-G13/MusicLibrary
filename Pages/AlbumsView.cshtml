@@ -49,6 +49,18 @@
         margin-top: 5px;
     }
 
+    .export-btn {
+    color: white;
+    <!--padding: 10px 20px;-->
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    position: fixed; 
+    bottom: 100px;
+    right: 180px;
+}
+
+
 </style>
 
 <div class="container">
@@ -74,6 +86,11 @@
     <button type="button" class="btn btn-primary" style="position: fixed; bottom: 100px; right: 50px;" onclick="event.stopPropagation(); showCreateModal()">
         Add Album
     </button>
+    <form method="post" asp-page-handler="ExportCsv">
+    <button type="submit" class="btn btn-primary export-btn">
+        <i class="fas fa-download"></i> Export to ZIP
+    </button>
+</form>
 </div>
 
 <!-- Album Detail Modal -->
