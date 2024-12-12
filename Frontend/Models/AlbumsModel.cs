@@ -36,19 +36,19 @@ namespace Frontend.Models
 
         public void AddAlbum(int owner, IFormFile? cover, string albumName, DateTime releaseDate, string artist, string type, string description, string[] tracks) 
         {
-            var coverImageBytes = GetCoverImageBytes(cover);
+            byte[] coverImageBytes = GetCoverImageBytes(cover) ?? [];
             _albumsService.AddAlbum(owner, coverImageBytes, albumName, releaseDate, artist, type, description, tracks);
         }
 
-        private byte[] GetCoverImageBytes(IFormFile? cover) {
-            byte[] coverImageBytes;
+        private byte[]? GetCoverImageBytes(IFormFile? cover) {
+            byte[]? coverImageBytes;
             if (cover != null) {
                 using (var memoryStream = new MemoryStream()) {
                     cover.CopyTo(memoryStream);
                     coverImageBytes = memoryStream.ToArray();
                 }
             } else {
-                coverImageBytes = new byte[1];
+                coverImageBytes = null;
             }
 
             return coverImageBytes;

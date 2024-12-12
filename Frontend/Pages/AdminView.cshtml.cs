@@ -1,15 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Backend.Models;
-using Backend.DataAccess;
+using Frontend.Models;
 
 namespace RazorMusic.Pages;
 
 public class AdminViewModel : PageModel
 {
     private readonly ILogger<PrivacyModel> _logger;
-    private readonly UserRepository userRepository = new UserRepository();
-    private readonly AlbumRepository albumRepository = new AlbumRepository();
+    private readonly LoginRegisterModel loginRegisterModel = new LoginRegisterModel();
+    private readonly AlbumsModel albumsModel = new AlbumsModel();
+    private readonly AdministrationModel administrationModel = new AdministrationModel();
 
     public List<UserModel> UserList = new List<UserModel>();
     public List<AlbumModel> AlbumList = new List<AlbumModel>();
@@ -28,24 +29,24 @@ public class AdminViewModel : PageModel
     private void GetUsersAndAlbums() {
         UserList.Clear();
         AlbumList.Clear();
-        UserList = userRepository.GetUsers();
+        UserList = administrationModel.GetUsers();
         foreach(var user in UserList) {
-            AlbumList.AddRange(albumRepository.GetAlbums(user.Id));
+            AlbumList.AddRange(albumsModel.GetAlbums(user.Id));
         }
     }
 
     public IActionResult OnGetDeleteAlbum(int albumId) {
-        albumRepository.DeleteAlbum(albumId);
+        albumsModel.DeleteAlbum(albumId);
         GetUsersAndAlbums();
         return new JsonResult(new { success = true });
     }
 
     public IActionResult OnGetDeleteUser(int userId) {
-        if(userRepository.IsAdmin(userId)) {
+        if(loginRegisterModel.IsAdmin(userId)) {
             return new JsonResult(new { success = false, message = "Cannot delete admin user" });
         }
-        albumRepository.DeleteAllUserAlbums(userId);
-        userRepository.DeleteUser(userId);
+        albumsModel.DeleteAllUserAlbums(userId);
+        administrationModel.DeleteUser(userId);
         GetUsersAndAlbums();
         return new JsonResult(new { success = true });
     }
@@ -55,7 +56,7 @@ public class AdminViewModel : PageModel
             Response.Redirect("/Login");
         } 
         var userId = HttpContext.Session.GetInt32("userId");
-        if(userId == null || !userRepository.IsAdmin(userId.Value)) {
+        if(userId == null || !loginRegisterModel.IsAdmin(userId.Value)) {
             Response.Redirect("/Index");
         }
     }

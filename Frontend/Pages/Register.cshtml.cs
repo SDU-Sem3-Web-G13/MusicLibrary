@@ -32,6 +32,13 @@ public class RegisterViewModel : PageModel
             byte[] emailHashBytes = System.Text.Encoding.UTF8.GetBytes(emailHash);
             byte[] passwordHashBytes = System.Text.Encoding.UTF8.GetBytes(passwordHash);
 
+            var userExists = model.EmailExists(LoginUser.Email);
+            if(userExists)
+            {
+                ErrorMessage = "User already exists";
+                return Page();
+            }
+
             model.AddUser(LoginUser.FirstName, LoginUser.Email);
             model.AddUserCredentials(emailHashBytes, passwordHashBytes);
 

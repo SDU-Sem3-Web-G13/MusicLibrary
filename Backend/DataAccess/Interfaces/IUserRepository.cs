@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Backend.Models;
 
 namespace Backend.DataAccess.Interfaces
@@ -15,6 +11,7 @@ namespace Backend.DataAccess.Interfaces
         public void DeleteUser(int id);
         public void DeleteUserCredentials(byte[] mailHash);
         public List<UserModel> GetUsers();
+        public UserModel GetSingleUser(int id);
         public int GetUserId(string email);
         public string? GetHashedPassword(string hashedEmailHex);
         public bool EmailExists(string email);

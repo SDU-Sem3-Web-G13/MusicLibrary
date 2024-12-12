@@ -88,6 +88,27 @@ namespace Backend.DataAccess
             return users;
         }
 
+        public UserModel GetSingleUser(int id)
+        {
+            string query = $"SELECT * FROM USERS WHERE U_ID = {id}";
+            using (var cmd = dbAccess.dbDataSource.CreateCommand(query))
+            {
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        return new UserModel(
+                            reader.GetInt32(0),
+                            reader.GetString(1),
+                            reader.GetString(2),
+                            reader.GetBoolean(3)
+                        );
+                    }
+                }
+            }
+            return null!;
+        }
+
         public int GetUserId(string email) 
         {
             string query = $"SELECT u_id FROM USERS WHERE U_MAIL = '{email}' LIMIT 1";
