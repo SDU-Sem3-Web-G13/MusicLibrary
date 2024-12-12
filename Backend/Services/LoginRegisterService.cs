@@ -2,6 +2,7 @@
 using System.Text;
 using Backend.DataAccess;
 using System.Diagnostics;
+using Backend.DataAccess.Interfaces;
 
 namespace Backend.Services;
 public interface ILoginRegisterService
@@ -18,7 +19,7 @@ public class LoginRegisterService: ILoginRegisterService
 {
     private string fixedSalt { get; set; }
 
-    private readonly UserRepository userRepository = new UserRepository();
+    private readonly IUserRepository userRepository = new UserRepository();
     public LoginRegisterService()
     {
         string envPath = Path.Combine(AppContext.BaseDirectory, ".env");

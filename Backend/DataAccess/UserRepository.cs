@@ -1,8 +1,9 @@
-﻿using Backend.Models;
+﻿using Backend.DataAccess.Interfaces;
+using Backend.Models;
 
 namespace Backend.DataAccess
 {
-    public class UserRepository
+    public class UserRepository: IUserRepository
     {
         private readonly DbAccess dbAccess;
 
@@ -101,27 +102,6 @@ namespace Backend.DataAccess
                 }
             }
             return 0;
-        }
-
-        public bool VerifyUserCredentials(string email, string password)
-        {
-            string query = $"SELECT * FROM USER_CREDENTIALS WHERE umail_hash = {email}";
-            bool isValidUser = false;
-            /*
-            using (var cmd = dbAccess.dbDataSource.CreateCommand(query))
-            {
-                using (var reader = cmd.ExecuteReader())
-                {
-                    var databaseEmail = reader.GetFieldValue<byte[]>(0);
-                    var databasePassword = reader.GetFieldValue<byte[]>(1);
-                    if (BCrypt.Net.BCrypt.Verify(email, databaseEmail) && BCrypt.Net.BCrypt.Verify(password, databasePassword))
-                    {
-                        isValidUser = true;
-                    }
-                }
-            }
-            */
-            return isValidUser;
         }
 
         public string? GetHashedPassword(string hashedEmailHex)

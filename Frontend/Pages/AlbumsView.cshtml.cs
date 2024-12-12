@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Backend.Models;
-using Backend.DataAccess;
+using Frontend.Models;
 
 namespace RazorMusic.Pages
 {
     public class AlbumsViewModel : PageModel
     {
-        private readonly AlbumRepository albumRepository = new AlbumRepository();
-        
+        private AlbumsModel model = new AlbumsModel();
         [BindProperty(SupportsGet = true)]
         public List<AlbumModel> Albums { get; set; } = new List<AlbumModel>();
 
@@ -21,30 +20,26 @@ namespace RazorMusic.Pages
             GetUserAlbums();
         }
 
-
         private void ValidateSessionStorage() {
             if (HttpContext.Session.GetInt32("IsLoggedIn") != 1) {
                 Response.Redirect("/Login");
             } 
         }
 
-
         private void GetUserAlbums() {
-            Albums.Clear();
             var userId = HttpContext.Session.GetInt32("userId");
-            foreach(var album in albumRepository.GetAlbums(userId ?? 0)) {
-                Albums.Add(album);
-            }
+            Albums = model.GetAlbums(userId ?? 0);
         }
 
+#region ActionResults
+
         public IActionResult OnGetGetAlbum(int albumId) {
-            var album = albumRepository.GetSingleAlbum(albumId);
+            var album = model.GetSingleAlbum(albumId);
             return new JsonResult(new { success = true, album });
         }
 
-
         public IActionResult OnGetDeleteAlbum(int albumId) {
-            albumRepository.DeleteAlbum(albumId);
+            model.DeleteAlbum(albumId);
             GetUserAlbums();
             return new JsonResult(new { success = true });
         }
@@ -53,52 +48,34 @@ namespace RazorMusic.Pages
             InputAlbum = new AlbumInputModel();
             return new JsonResult(new { success = true });
         }
-        public IActionResult OnPostAddAlbum() {
-
-            byte[] coverImageBytes;
-            if (InputAlbum.CoverImage != null) {
-                using (var memoryStream = new MemoryStream()) {
-                    InputAlbum.CoverImage.CopyTo(memoryStream);
-                    coverImageBytes = memoryStream.ToArray();
-                }
-            } else {
-                coverImageBytes = new byte[1];
-            }
-            
+        public IActionResult OnPostAddAlbum() {            
             var userId = HttpContext.Session.GetInt32("userId");
             if (userId == null) return new JsonResult(new { success = false });
-            albumRepository.AddAlbum(userId ?? 0, coverImageBytes, InputAlbum.AlbumName, InputAlbum.ReleaseDate, InputAlbum.Artist, InputAlbum.AlbumType, InputAlbum.Description, InputAlbum.Tracks);
+
+            model.AddAlbum(userId ?? 0, InputAlbum.CoverImage, InputAlbum.AlbumName, InputAlbum.ReleaseDate, InputAlbum.Artist, InputAlbum.AlbumType, InputAlbum.Description, InputAlbum.Tracks);
             GetUserAlbums();
             return new JsonResult(new { success = true });
         }
 
         public IActionResult OnPostEditAlbum() {
-            byte[]? coverImageBytes;
-            if (InputAlbum.CoverImage != null) {
-                using (var memoryStream = new MemoryStream()) {
-                    InputAlbum.CoverImage.CopyTo(memoryStream);
-                    coverImageBytes = memoryStream.ToArray();
-                }
-            } else {
-                coverImageBytes = null;
-            }
             var userId = HttpContext.Session.GetInt32("userId");
-
             if(userId == null) return new JsonResult(new { success = false });
             
-            albumRepository.ModifyAlbum(InputAlbum.AlbumId, userId ?? 0 , coverImageBytes, InputAlbum.AlbumName, InputAlbum.ReleaseDate, InputAlbum.Artist, InputAlbum.AlbumType, InputAlbum.Description, InputAlbum.Tracks);
+            model.ModifyAlbum(InputAlbum.AlbumId, userId ?? 0 , InputAlbum.CoverImage, InputAlbum.AlbumName, InputAlbum.ReleaseDate, InputAlbum.Artist, InputAlbum.AlbumType, InputAlbum.Description, InputAlbum.Tracks);
             GetUserAlbums();
             return new JsonResult(new { success = true });
         }
 
         public IActionResult OnGetRetrieveAlbumCover(int albumId) {
-            var album = albumRepository.GetSingleAlbum(albumId);
+            var album = model.GetSingleAlbum(albumId);
             if (album.CoverImage == null) return new JsonResult(new { success = false });
 
-            var base64Image = Convert.ToBase64String(album.CoverImage);
+            var base64Image = album.GetCoverImageBase64();
             return new JsonResult(new { success = true, coverImage = base64Image });
         }
     }
+
+#endregion
 
     public class AlbumInputModel
     {   

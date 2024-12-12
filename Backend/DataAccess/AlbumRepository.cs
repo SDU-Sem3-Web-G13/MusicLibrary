@@ -1,9 +1,10 @@
 ﻿using System;
 using Backend.Models;
+using Backend.DataAccess.Interfaces;
 
 namespace Backend.DataAccess
 {
-    public class AlbumRepository
+    public class AlbumRepository: IAlbumRepository
     {
         private readonly DbAccess dbAccess;
 
