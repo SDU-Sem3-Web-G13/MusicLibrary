@@ -7,18 +7,21 @@ namespace RazorMusic.Pages;
 
 public class AdminViewModel : PageModel
 {
-    private readonly ILogger<PrivacyModel> _logger;
-    private readonly LoginRegisterModel loginRegisterModel = new LoginRegisterModel();
-    private readonly AlbumsModel albumsModel = new AlbumsModel();
-    private readonly AdministrationModel administrationModel = new AdministrationModel();
+    private readonly ILogger<AdminViewModel> _logger;
+    private readonly LoginRegisterModel _loginRegisterModel;
+    private readonly AlbumsModel _albumsModel;
+    private readonly AdministrationModel _administrationModel;
 
     public List<UserModel> UserList = new List<UserModel>();
     public List<AlbumModel> AlbumList = new List<AlbumModel>();
 
-    public AdminViewModel(ILogger<PrivacyModel> logger)
-    {
-        _logger = logger;
-    }
+    public AdminViewModel(ILogger<AdminViewModel> logger, LoginRegisterModel loginRegisterModel, AlbumsModel albumsModel, AdministrationModel administrationModel)
+        {
+            _logger = logger;
+            _loginRegisterModel = loginRegisterModel;
+            _albumsModel = albumsModel;
+            _administrationModel = administrationModel;
+        }
 
     public void OnGet()
     {
@@ -29,24 +32,24 @@ public class AdminViewModel : PageModel
     private void GetUsersAndAlbums() {
         UserList.Clear();
         AlbumList.Clear();
-        UserList = administrationModel.GetUsers();
+        UserList = _administrationModel.GetUsers();
         foreach(var user in UserList) {
-            AlbumList.AddRange(albumsModel.GetAlbums(user.Id));
+            AlbumList.AddRange(_albumsModel.GetAlbums(user.Id));
         }
     }
 
     public IActionResult OnGetDeleteAlbum(int albumId) {
-        albumsModel.DeleteAlbum(albumId);
+        _albumsModel.DeleteAlbum(albumId);
         GetUsersAndAlbums();
         return new JsonResult(new { success = true });
     }
 
     public IActionResult OnGetDeleteUser(int userId) {
-        if(loginRegisterModel.IsAdmin(userId)) {
+        if(_loginRegisterModel.IsAdmin(userId)) {
             return new JsonResult(new { success = false, message = "Cannot delete admin user" });
         }
-        albumsModel.DeleteAllUserAlbums(userId);
-        administrationModel.DeleteUser(userId);
+        _albumsModel.DeleteAllUserAlbums(userId);
+        _administrationModel.DeleteUser(userId);
         GetUsersAndAlbums();
         return new JsonResult(new { success = true });
     }
@@ -56,7 +59,7 @@ public class AdminViewModel : PageModel
             Response.Redirect("/Login");
         } 
         var userId = HttpContext.Session.GetInt32("userId");
-        if(userId == null || !loginRegisterModel.IsAdmin(userId.Value)) {
+        if(userId == null || !_loginRegisterModel.IsAdmin(userId.Value)) {
             Response.Redirect("/Index");
         }
     }

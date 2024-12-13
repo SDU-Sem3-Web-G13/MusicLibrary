@@ -7,7 +7,14 @@ namespace Frontend.Models;
 
 public class LoginRegisterModel
 {
-    private readonly ILoginRegisterService _loginRegisterService = new LoginRegisterService();
+    private readonly ILoginRegisterService _loginRegisterService;
+
+    public LoginRegisterModel(ILoginRegisterService loginRegisterService)
+    {
+        _loginRegisterService = loginRegisterService;
+    }
+
+    
     public bool EmailExists(string email) {
         return _loginRegisterService.EmailExists(email);
     }

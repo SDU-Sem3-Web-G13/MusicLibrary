@@ -10,11 +10,12 @@ public class LoginViewModel : PageModel
 
     public string? ErrorMessage { get; set; } = null;
 
-    private readonly LoginRegisterModel model = new LoginRegisterModel();
+    private readonly LoginRegisterModel model;
     private readonly string fixedSalt;
 
-    public LoginViewModel()
+    public LoginViewModel(LoginRegisterModel model)
     {
+        this.model = model; 
         fixedSalt = model.GetFixedSalt();
     }
 

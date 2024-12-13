@@ -13,12 +13,13 @@ public class RegisterViewModel : PageModel
     [BindProperty]
     public string ErrorMessage { get; set; } = string.Empty;
 
-    private readonly LoginRegisterModel model = new LoginRegisterModel();
+    private readonly LoginRegisterModel model;
 
     private readonly string FixedSalt;
 
-    public RegisterViewModel()
+    public RegisterViewModel(LoginRegisterModel model)
     {
+        this.model = model;
         FixedSalt = model.GetFixedSalt();
     }
 

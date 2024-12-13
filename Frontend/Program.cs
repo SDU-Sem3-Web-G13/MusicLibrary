@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Backend.DataAccess;
+using Backend.Services;
+using Frontend.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,16 @@ builder.Services.AddMvc().AddRazorPagesOptions(o =>
             o.Conventions.ConfigureFilter(new IgnoreAntiforgeryTokenAttribute()));
 builder.Services.AddSession();
 builder.Services.AddMemoryCache();
-builder.Services.AddScoped<UserRepository>();
+
+// Register backend services
+builder.Services.AddScoped<IAdministrationService, AdministrationService>();
+builder.Services.AddScoped<IAlbumsService, AlbumsService>();
+builder.Services.AddScoped<ILoginRegisterService, LoginRegisterService>();
+
+// Register frontend models
+builder.Services.AddScoped<LoginRegisterModel>();
+builder.Services.AddScoped<AlbumsModel>();
+builder.Services.AddScoped<AdministrationModel>();
 
 var app = builder.Build();
 

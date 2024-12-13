@@ -5,8 +5,12 @@ namespace Frontend.Models
 {
     public class AlbumsModel
     {
-        private readonly IAlbumsService _albumsService = new AlbumsService();
+        private readonly IAlbumsService _albumsService;
 
+        public AlbumsModel(IAlbumsService albumsService)
+        {
+            _albumsService = albumsService;
+        }
 
         public List<AlbumModel> GetAlbums(int userId) 
         {
