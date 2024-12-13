@@ -19,14 +19,21 @@ public class LoginRegisterService: ILoginRegisterService
 {
     private string fixedSalt { get; set; }
 
-    private readonly IUserRepository userRepository = new UserRepository();
-    public LoginRegisterService()
+    private readonly IUserRepository userRepository;
+
+    public LoginRegisterService(IUserRepository userRepository)
+    {
+        this.userRepository = userRepository;
+        fixedSalt = LoadFixedSalt();
+    }
+
+    private string LoadFixedSalt()
     {
         string envPath = Path.Combine(AppContext.BaseDirectory, ".env");
         Env.Load(envPath);
 
         string base64Salt = Env.GetString("BCRYPT_SALT");
-        fixedSalt = Encoding.UTF8.GetString(Convert.FromBase64String(base64Salt));
+        return Encoding.UTF8.GetString(Convert.FromBase64String(base64Salt));
     }
 
     public bool EmailExists(string email)

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Backend.Services;
+using Backend;
 using Frontend.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,9 +12,7 @@ builder.Services.AddSession();
 builder.Services.AddMemoryCache();
 
 // Register backend services
-builder.Services.AddScoped<IAdministrationService, AdministrationService>();
-builder.Services.AddScoped<IAlbumsService, AlbumsService>();
-builder.Services.AddScoped<ILoginRegisterService, LoginRegisterService>();
+builder.Services.AddBackendServices();
 
 // Register frontend models
 builder.Services.AddScoped<LoginRegisterModel>();

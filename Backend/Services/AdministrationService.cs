@@ -18,10 +18,10 @@ namespace Backend.Services
 
         private readonly IUserRepository _userRepository;
 
-        public AdministrationService() 
+        public AdministrationService(IUserRepository userRepository, ILoginRegisterService loginRegisterService)
         {
-            _userRepository = new UserRepository();
-            _loginRegisterService = new LoginRegisterService();
+            _userRepository = userRepository;
+            _loginRegisterService = loginRegisterService;
         }
 
         public List<UserModel> GetUsers() 

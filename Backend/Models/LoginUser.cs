@@ -29,7 +29,7 @@ public class UniqueEmailAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
-        var userRepository = validationContext.GetService(typeof(UserRepository)) as UserRepository;
+        var userRepository = validationContext.GetService(typeof(SqlUserRepository)) as SqlUserRepository;
         var email = value as string ?? "";
         var user = validationContext.ObjectInstance as LoginUser;
 

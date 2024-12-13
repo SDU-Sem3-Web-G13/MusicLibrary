@@ -16,7 +16,14 @@ namespace Backend.Services
 
     public class AlbumsService: IAlbumsService
     {
-        private readonly IAlbumRepository _albumRepository = new AlbumRepository();
+        private readonly IAlbumRepository _albumRepository;
+
+        public AlbumsService(IAlbumRepository albumRepository)
+        {
+            _albumRepository = albumRepository;
+        }
+
+        
         public List<AlbumModel> GetAlbums(int userId)
         {
             return _albumRepository.GetAlbums(userId);
