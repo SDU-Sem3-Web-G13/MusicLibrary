@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RazorMusic", "Frontend\Razo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{42D45ACC-20E5-457D-A356-509B57D432BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend.Tests", "Backend.Tests\Backend.Tests.csproj", "{5DBDF19C-B902-4C45-8577-7E9D0E05A82C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{42D45ACC-20E5-457D-A356-509B57D432BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42D45ACC-20E5-457D-A356-509B57D432BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42D45ACC-20E5-457D-A356-509B57D432BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DBDF19C-B902-4C45-8577-7E9D0E05A82C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DBDF19C-B902-4C45-8577-7E9D0E05A82C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DBDF19C-B902-4C45-8577-7E9D0E05A82C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DBDF19C-B902-4C45-8577-7E9D0E05A82C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
