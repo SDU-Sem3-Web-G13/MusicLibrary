@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Backend.DataAccess;
+using Backend.DataAccess.Interfaces;
 
 namespace Backend.Models;
 
@@ -29,7 +30,7 @@ public class UniqueEmailAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
-        var userRepository = validationContext.GetService(typeof(SqlUserRepository)) as SqlUserRepository;
+        var userRepository = validationContext.GetService(typeof(IUserRepository)) as IUserRepository;
         var email = value as string ?? "";
         var user = validationContext.ObjectInstance as LoginUser;
 

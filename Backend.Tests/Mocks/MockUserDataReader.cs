@@ -1,4 +1,4 @@
-namespace Backend.Tests;
+namespace Backend.Tests.Mocks;
 public class MockUserDataReader : IDataReader
 {
     private readonly IEnumerator<object[]> _enumerator;
