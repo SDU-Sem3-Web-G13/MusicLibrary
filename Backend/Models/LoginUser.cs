@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Backend.DataAccess;
 using Backend.DataAccess.Interfaces;
+using Backend.Services;
 
 namespace Backend.Models;
 
@@ -30,17 +31,17 @@ public class UniqueEmailAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
-        var userRepository = validationContext.GetService(typeof(IUserRepository)) as IUserRepository;
+        var LoginRegisterService = validationContext.GetService(typeof(ILoginRegisterService)) as ILoginRegisterService;
         var email = value as string ?? "";
         var user = validationContext.ObjectInstance as LoginUser;
 
-        if (user != null && userRepository != null) 
+        if (user != null && LoginRegisterService != null) 
         {
-            if(user.SourcePage == "RegistrationPage" && userRepository.EmailExists(email))
+            if(user.SourcePage == "RegistrationPage" && LoginRegisterService.EmailExists(email))
             {
                 return new ValidationResult("User with that Email already exists.");
             }
-            else if(user.SourcePage == "LoginPage" && !userRepository.EmailExists(email))
+            else if(user.SourcePage == "LoginPage" && !LoginRegisterService.EmailExists(email))
             {
                 return new ValidationResult("User with that Email does not exist.");
             }
