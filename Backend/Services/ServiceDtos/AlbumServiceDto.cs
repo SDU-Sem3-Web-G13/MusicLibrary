@@ -1,8 +1,24 @@
-﻿using Backend.Enums;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Backend.Models
+namespace Backend.Services.ServiceDtos
 {
-    public class AlbumModel
+    public interface IAlbumServiceDto : IServiceDto
+    {
+        int? Id { get; set; }
+        int? OwnerId { get; set; }
+        byte[]? CoverImage { get; set; }
+        string AlbumName { get; set; }
+        DateTime? ReleaseDate { get; set; }
+        string Artist { get; set; }
+        string AlbumType { get; set; }
+        string Description { get; set; }
+        string[] Tracks { get; set; } 
+    }
+
+    public class AlbumServiceDto: IAlbumServiceDto
     {
         public int? Id { get; set; }
         public int? OwnerId { get; set; }
@@ -14,9 +30,9 @@ namespace Backend.Models
         public string Description { get; set; }
         public string[] Tracks { get; set; } 
 
-        public AlbumModel(
+        public AlbumServiceDto(
             string albumName,
-            DateTime releaseDate,
+            DateTime? releaseDate,
             string artist,
             string albumType,
             string description,
@@ -28,11 +44,6 @@ namespace Backend.Models
             this.AlbumType = albumType;
             this.Description = description;
             this.Tracks = tracks;
-        }
-
-        public string GetCoverImageBase64()
-        {
-            return Convert.ToBase64String(CoverImage ?? new byte[1]);
         }
     }
 }

@@ -13,7 +13,6 @@ global using Backend.Tests.Mocks;
 
 // Backend
 global using Backend;
-global using Backend.Models;
 global using Backend.Enums;
 global using Backend.DataAccess.Interfaces;
 global using Backend.DataAccess;

@@ -1,3 +1,5 @@
+using Backend.DataAccess.Dtos;
+
 namespace Backend.Tests.RepositoryTests
 {
     public class SqlUserRepositoryTests
@@ -115,10 +117,10 @@ namespace Backend.Tests.RepositoryTests
         public void GetUsers_ShouldReturnListOfUsers()
         {
             // Arrange
-            var users = new List<UserModel>
+            var users = new List<IUserDto>
             {
-                new UserModel(1, "John Doe", "john.doe@example.com", false),
-                new UserModel(2, "Jane Doe", "jane.doe@example.com", true)
+                new UserDto(1, "John Doe", "john.doe@example.com", false),
+                new UserDto(2, "Jane Doe", "jane.doe@example.com", true)
             };
 
             _mockDataSource.Setup(ds => ds.ExecuteReader(It.IsAny<string>()))
@@ -136,7 +138,7 @@ namespace Backend.Tests.RepositoryTests
         {
             // Arrange
             int id = 1;
-            var user = new UserModel(id, "John Doe", "john.doe@example.com", false);
+            var user = new UserDto(id, "John Doe", "john.doe@example.com", false);
 
             _mockDataSource.Setup(ds => ds.ExecuteReader(It.IsAny<string>()))
                 .Returns(new MockUserDataReader(new List<object[]> { new object[] { user.Id, user.Name, user.Mail, user.IsAdmin } }));

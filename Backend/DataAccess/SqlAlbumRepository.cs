@@ -1,6 +1,5 @@
-﻿using System;
-using Backend.Models;
-using Backend.DataAccess.Interfaces;
+﻿using Backend.DataAccess.Interfaces;
+using Backend.DataAccess.Dtos;
 
 namespace Backend.DataAccess
 {
@@ -46,17 +45,17 @@ namespace Backend.DataAccess
             else _dataSource.ExecuteNonQuery(sql, ("@id", id), ("@owner", owner), ("@albumName", albumName), ("@releaseDate", releaseDate), ("@artist", artist), ("@type", type), ("@description", description), ("@tracks", tracks));
         }
 
-        public List<AlbumModel> GetAlbums(int userID)
+        public List<IAlbumDto> GetAlbums(int userID)
         {
             string query = $"SELECT * FROM albums where a_owner = {userID}";
 
-            List<AlbumModel> albums = new List<AlbumModel>();
+            List<IAlbumDto> albums = new List<IAlbumDto>();
 
             using (var reader = _dataSource.ExecuteReader(query))
             {
                 while (reader.Read())
                 {
-                    AlbumModel album = new AlbumModel(
+                    IAlbumDto album = new AlbumDto(
                         reader.GetString(3),
                         reader.GetDateTime(4),
                         reader.GetString(5),
@@ -74,13 +73,13 @@ namespace Backend.DataAccess
             return albums;
         }
 
-        public AlbumModel GetSingleAlbum(int albumId) {
+        public IAlbumDto GetSingleAlbum(int albumId) {
             string query = $"SELECT * FROM albums WHERE a_id = {albumId}";
             using (var reader = _dataSource.ExecuteReader(query))
             {
                 if (reader.Read())
                 {
-                    AlbumModel album = new AlbumModel(
+                    IAlbumDto album = new AlbumDto(
                         reader.GetString(3),
                         reader.GetDateTime(4),
                         reader.GetString(5),

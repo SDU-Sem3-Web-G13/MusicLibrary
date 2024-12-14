@@ -1,4 +1,4 @@
-using Backend.Models;
+using Frontend.Objects;
 using Backend.Services;
 
 namespace Frontend.Models
@@ -20,7 +20,13 @@ namespace Frontend.Models
         
         public List<UserModel> GetUsers() 
         {
-            return _administrationService.GetUsers();
+            return _administrationService.GetUsers().Select(dto => new UserModel
+            (
+                dto.Id,
+                dto.Name,
+                dto.Mail,
+                dto.IsAdmin
+            )).ToList();
         }
 
         public void DeleteUser(int id) 

@@ -1,4 +1,4 @@
-using Backend.Models;
+using Backend.DataAccess.Dtos;
 
 namespace Backend.DataAccess.Interfaces
 {
@@ -10,8 +10,8 @@ namespace Backend.DataAccess.Interfaces
         public void ModifyUserCredentials(byte[] mailHash, byte[] passHash);
         public void DeleteUser(int id);
         public void DeleteUserCredentials(byte[] mailHash);
-        public List<UserModel> GetUsers();
-        public UserModel GetSingleUser(int id);
+        public List<IUserDto> GetUsers();
+        public IUserDto GetSingleUser(int id);
         public int GetUserId(string email);
         public string? GetHashedPassword(string hashedEmailHex);
         public bool EmailExists(string email);

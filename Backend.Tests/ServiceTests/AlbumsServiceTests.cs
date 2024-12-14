@@ -1,3 +1,5 @@
+using Backend.DataAccess.Dtos;
+
 namespace Backend.Tests.ServiceTests
 {
     public class AlbumsServiceTests
@@ -16,14 +18,14 @@ namespace Backend.Tests.ServiceTests
         {
             // Arrange
             int userId = 1;
-            var albums = new List<AlbumModel> { new AlbumModel("Test Album", DateTime.Now, "Test Artist", "Test Type", "Test Description", new string[] { "Track1", "Track2" }) { Id = 1, OwnerId = userId } };
+            var albums = new List<IAlbumDto> { new AlbumDto("Test Album", DateTime.Now, "Test Artist", "Test Type", "Test Description", new string[] { "Track1", "Track2" }) { Id = 1, OwnerId = userId } };
             _albumRepositoryMock.Setup(repo => repo.GetAlbums(userId)).Returns(albums);
 
             // Act
-            var result = _albumsService.GetAlbums(userId);
+            var result = _albumsService.GetAlbums(userId).Select(album => new AlbumDto(album.AlbumName, album.ReleaseDate, album.Artist, album.AlbumType, album.Description, album.Tracks) {Id = album.Id, OwnerId = album.OwnerId}).ToList();
 
             // Assert
-            Assert.Equal(albums, result);
+            result.Should().BeEquivalentTo(albums);
         }
 
         [Fact]
@@ -31,14 +33,16 @@ namespace Backend.Tests.ServiceTests
         {
             // Arrange
             int albumId = 1;
-            var album = new AlbumModel("Test Album", DateTime.Now, "Test Artist", "Test Type", "Test Description", new string[] { "Track1", "Track2" }) { Id = albumId };
+            var album = new AlbumDto("Test Album", DateTime.Now, "Test Artist", "Test Type", "Test Description", new string[] { "Track1", "Track2" }) { Id = albumId };
             _albumRepositoryMock.Setup(repo => repo.GetSingleAlbum(albumId)).Returns(album);
 
             // Act
-            var result = _albumsService.GetSingleAlbum(albumId);
+            var response = _albumsService.GetSingleAlbum(albumId);
+            var result = new AlbumDto(response.AlbumName, response.ReleaseDate, response.Artist, response.AlbumType, response.Description, response.Tracks) { Id = response.Id };
+
 
             // Assert
-            Assert.Equal(album, result);
+            result.Should().BeEquivalentTo(album);  
         }
 
         [Fact]

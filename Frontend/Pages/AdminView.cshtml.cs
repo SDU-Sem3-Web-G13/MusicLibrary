@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Backend.Models;
+using Frontend.Objects;
 using Frontend.Models;
 
 namespace RazorMusic.Pages;
@@ -33,7 +33,7 @@ public class AdminViewModel : PageModel
         AlbumList.Clear();
         UserList = _administrationModel.GetUsers();
         foreach(var user in UserList) {
-            AlbumList.AddRange(_albumsModel.GetAlbums(user.Id));
+            AlbumList.AddRange((IEnumerable<AlbumModel>)_albumsModel.GetAlbums(user.Id));
         }
     }
 

@@ -1,3 +1,6 @@
+using Backend.DataAccess.Dtos;
+using Backend.Services.ServiceDtos;
+
 namespace Backend.Tests.ServiceTests
 {
     public class AdministrationServiceTests
@@ -17,14 +20,14 @@ namespace Backend.Tests.ServiceTests
         public void GetUsers_ReturnsListOfUsers()
         {
             // Arrange
-            var users = new List<UserModel> { new UserModel(1, "test@example.com", "passwordHash", true) };
+            var users = new List<IUserDto> { new UserDto(1, "test", "test@example.com", true) };
             _userRepositoryMock.Setup(repo => repo.GetUsers()).Returns(users);
 
             // Act
-            var result = _administrationService.GetUsers();
+            var result = _administrationService.GetUsers().Select(user => new UserDto(user.Id, user.Name, user.Mail, user.IsAdmin)).ToList();
 
             // Assert
-            Assert.Equal(users, result);
+            result.Should().BeEquivalentTo(users);
         }
 
         [Fact]
@@ -32,7 +35,7 @@ namespace Backend.Tests.ServiceTests
         {
             // Arrange
             int userId = 1;
-            var user = new UserModel(userId, "test@example.com", "passwordHash", true);
+            var user = new UserDto(userId, "test", "test@example.com", true);
             var fixedSalt = BCrypt.Net.BCrypt.GenerateSalt();
             var emailHash = BCrypt.Net.BCrypt.HashPassword(user.Mail, fixedSalt);
             var emailHashBytes = System.Text.Encoding.UTF8.GetBytes(emailHash);

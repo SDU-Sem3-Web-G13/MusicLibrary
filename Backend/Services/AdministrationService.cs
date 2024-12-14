@@ -1,13 +1,13 @@
 using Backend.DataAccess;
 using Backend.DataAccess.Interfaces;
-using Backend.Models;
+using Backend.Services.ServiceDtos;
 using BCrypt.Net;
 
 namespace Backend.Services
 {
     public interface IAdministrationService
     {
-        public List<UserModel> GetUsers();
+        public List<IUserServiceDto> GetUsers();
         public void DeleteUser(int id);
 
     }
@@ -24,9 +24,15 @@ namespace Backend.Services
             _loginRegisterService = loginRegisterService;
         }
 
-        public List<UserModel> GetUsers() 
+        public List<IUserServiceDto> GetUsers() 
         {
-            return _userRepository.GetUsers();
+            return _userRepository.GetUsers().Select(user => new UserServiceDto
+            (
+                user.Id,
+                user.Name,
+                user.Mail,
+                user.IsAdmin
+            )).ToList<IUserServiceDto>();
         }
 
         public void DeleteUser(int id) 
