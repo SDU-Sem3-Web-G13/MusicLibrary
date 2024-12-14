@@ -7,7 +7,7 @@ namespace RazorMusic.Pages;
 
 public class AdminViewModel : PageModel
 {
-    private readonly ILogger<AdminViewModel> _logger;
+
     private readonly ILoginRegisterModel _loginRegisterModel;
     private readonly IAlbumsModel _albumsModel;
     private readonly IAdministrationModel _administrationModel;
@@ -15,9 +15,8 @@ public class AdminViewModel : PageModel
     public List<UserModel> UserList = new List<UserModel>();
     public List<AlbumModel> AlbumList = new List<AlbumModel>();
 
-    public AdminViewModel(ILogger<AdminViewModel> logger, ILoginRegisterModel loginRegisterModel, IAlbumsModel albumsModel, IAdministrationModel administrationModel)
+    public AdminViewModel(ILoginRegisterModel loginRegisterModel, IAlbumsModel albumsModel, IAdministrationModel administrationModel)
         {
-            _logger = logger;
             _loginRegisterModel = loginRegisterModel;
             _albumsModel = albumsModel;
             _administrationModel = administrationModel;
