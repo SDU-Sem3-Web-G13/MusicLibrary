@@ -7,7 +7,7 @@ namespace RazorMusic.Pages
 {
     public class AlbumsViewModel : PageModel
     {
-        private AlbumsModel model;
+        private IAlbumsModel model;
 
         [BindProperty(SupportsGet = true)]
         public List<AlbumModel> Albums { get; set; } = new List<AlbumModel>();
@@ -15,7 +15,7 @@ namespace RazorMusic.Pages
         [BindProperty]
         public AlbumInputModel InputAlbum { get; set; } = null!;
 
-        public AlbumsViewModel(AlbumsModel albumsModel)
+        public AlbumsViewModel(IAlbumsModel albumsModel)
         {
             model = albumsModel;
         }

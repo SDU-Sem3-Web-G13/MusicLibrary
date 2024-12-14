@@ -3,7 +3,13 @@ using Backend.Services;
 
 namespace Frontend.Models
 {
-    public class AdministrationModel
+    public interface IAdministrationModel
+    {
+        List<UserModel> GetUsers();
+        void DeleteUser(int id);
+    }
+
+    public class AdministrationModel: IAdministrationModel
     {
         private readonly IAdministrationService _administrationService;
 

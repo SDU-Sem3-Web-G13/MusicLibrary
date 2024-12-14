@@ -15,9 +15,9 @@ builder.Services.AddMemoryCache();
 builder.Services.AddBackendServices();
 
 // Register frontend models
-builder.Services.AddScoped<LoginRegisterModel>();
-builder.Services.AddScoped<AlbumsModel>();
-builder.Services.AddScoped<AdministrationModel>();
+builder.Services.AddScoped<ILoginRegisterModel, LoginRegisterModel>();
+builder.Services.AddScoped<IAlbumsModel, AlbumsModel>();
+builder.Services.AddScoped<IAdministrationModel, AdministrationModel>();
 
 var app = builder.Build();
 

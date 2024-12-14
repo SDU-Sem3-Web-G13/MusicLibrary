@@ -8,14 +8,14 @@ namespace RazorMusic.Pages;
 public class AdminViewModel : PageModel
 {
     private readonly ILogger<AdminViewModel> _logger;
-    private readonly LoginRegisterModel _loginRegisterModel;
-    private readonly AlbumsModel _albumsModel;
-    private readonly AdministrationModel _administrationModel;
+    private readonly ILoginRegisterModel _loginRegisterModel;
+    private readonly IAlbumsModel _albumsModel;
+    private readonly IAdministrationModel _administrationModel;
 
     public List<UserModel> UserList = new List<UserModel>();
     public List<AlbumModel> AlbumList = new List<AlbumModel>();
 
-    public AdminViewModel(ILogger<AdminViewModel> logger, LoginRegisterModel loginRegisterModel, AlbumsModel albumsModel, AdministrationModel administrationModel)
+    public AdminViewModel(ILogger<AdminViewModel> logger, ILoginRegisterModel loginRegisterModel, IAlbumsModel albumsModel, IAdministrationModel administrationModel)
         {
             _logger = logger;
             _loginRegisterModel = loginRegisterModel;
@@ -57,6 +57,7 @@ public class AdminViewModel : PageModel
     private void ValidateSessionStorage() {
         if (HttpContext.Session.GetInt32("IsLoggedIn") != 1) {
             Response.Redirect("/Login");
+            return;
         } 
         var userId = HttpContext.Session.GetInt32("userId");
         if(userId == null || !_loginRegisterModel.IsAdmin(userId.Value)) {

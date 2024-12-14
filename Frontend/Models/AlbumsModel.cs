@@ -3,7 +3,17 @@ using Backend.Services;
 
 namespace Frontend.Models
 {
-    public class AlbumsModel
+    public interface IAlbumsModel
+    {
+        List<AlbumModel> GetAlbums(int userId);
+        AlbumModel GetSingleAlbum(int albumId);
+        void DeleteAlbum(int id);
+        void DeleteAllUserAlbums(int userId);
+        void ModifyAlbum(int id, int owner, IFormFile? cover, string albumName, DateTime releaseDate, string artist, string type, string description, string[] tracks);
+        void AddAlbum(int owner, IFormFile? cover, string albumName, DateTime releaseDate, string artist, string type, string description, string[] tracks);
+    }
+
+    public class AlbumsModel: IAlbumsModel
     {
         private readonly IAlbumsService _albumsService;
 

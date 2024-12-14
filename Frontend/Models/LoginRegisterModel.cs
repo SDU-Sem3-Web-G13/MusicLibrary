@@ -5,7 +5,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Frontend.Models;
 
-public class LoginRegisterModel
+public interface ILoginRegisterModel
+{
+    bool EmailExists(string email);
+    string GetFixedSalt();
+    string ConvertToHex(string input);
+    bool ValidateCredentials(string emailHash, string passwordHash);
+    int GetUserId(string email);
+    bool IsAdmin(int id);
+    void AddUser(string firstName, string email);
+    void AddUserCredentials(byte[] emailHash, byte[] passwordHash);
+}
+
+public class LoginRegisterModel: ILoginRegisterModel
 {
     private readonly ILoginRegisterService _loginRegisterService;
 
