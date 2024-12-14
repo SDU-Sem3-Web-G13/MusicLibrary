@@ -1,4 +1,4 @@
-using Backend.Models;
+using Frontend.Objects;
 using Backend.Services;
 
 namespace Frontend.Models
@@ -24,12 +24,39 @@ namespace Frontend.Models
 
         public List<AlbumModel> GetAlbums(int userId) 
         {
-            return _albumsService.GetAlbums(userId);
+            var serviceDtos = _albumsService.GetAlbums(userId);
+            var albumModels = serviceDtos.Select(dto => {
+                var x = new AlbumModel(
+                    dto.AlbumName,
+                    dto.ReleaseDate,
+                    dto.Artist,
+                    dto.AlbumType,
+                    dto.Description,
+                    dto.Tracks
+                );
+                x.Id = dto.Id;
+                x.OwnerId = dto.OwnerId;
+                x.CoverImage = dto.CoverImage;
+                return x;
+            }).ToList();
+            return albumModels;
         }
 
         public AlbumModel GetSingleAlbum(int albumId) 
         {
-            return _albumsService.GetSingleAlbum(albumId);
+            var album = _albumsService.GetSingleAlbum(albumId);
+            var x = new AlbumModel(
+                album.AlbumName,
+                album.ReleaseDate,
+                album.Artist,
+                album.AlbumType,
+                album.Description,
+                album.Tracks
+            );
+            x.Id = album.Id;
+            x.OwnerId = album.OwnerId;
+            x.CoverImage = album.CoverImage;
+            return x;
         }
 
         public void DeleteAlbum(int id) 

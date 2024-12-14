@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Backend.Models;
+using Frontend.Objects;
 using Frontend.Models;
 
 namespace RazorMusic.Pages

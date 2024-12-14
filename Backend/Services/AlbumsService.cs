@@ -1,13 +1,13 @@
 using Backend.DataAccess;
+using Backend.Services.ServiceDtos;
 using Backend.DataAccess.Interfaces;
-using Backend.Models;
 
 namespace Backend.Services
 {
     public interface IAlbumsService
     {
-        public List<AlbumModel> GetAlbums(int userId);
-        public AlbumModel GetSingleAlbum(int albumId);
+        public List<IAlbumServiceDto> GetAlbums(int userId);
+        public IAlbumServiceDto GetSingleAlbum(int albumId);
         public void DeleteAlbum(int id);
         public void DeleteAllUserAlbums(int userId);
         public void AddAlbum(int owner, byte[] cover, string albumName, DateTime releaseDate, string artist, string type, string description, string[] tracks);
@@ -24,13 +24,39 @@ namespace Backend.Services
         }
 
         
-        public List<AlbumModel> GetAlbums(int userId)
+        public List<IAlbumServiceDto> GetAlbums(int userId)
         {
-            return _albumRepository.GetAlbums(userId);
+            var albums = _albumRepository.GetAlbums(userId);
+            return albums.Select(album => { 
+                var x = new AlbumServiceDto(
+                    album.AlbumName,
+                    album.ReleaseDate,
+                    album.Artist,
+                    album.AlbumType,
+                    album.Description,
+                    album.Tracks
+                );
+                x.Id = album.Id;
+                x.OwnerId = album.OwnerId;
+                x.CoverImage = album.CoverImage;
+                return x;
+            }).ToList<IAlbumServiceDto>();
         }
 
-        public AlbumModel GetSingleAlbum(int albumId) {
-            return _albumRepository.GetSingleAlbum(albumId);
+        public IAlbumServiceDto GetSingleAlbum(int albumId) {
+            var album = _albumRepository.GetSingleAlbum(albumId);
+            var x = new AlbumServiceDto(
+                album.AlbumName,
+                album.ReleaseDate,
+                album.Artist,
+                album.AlbumType,
+                album.Description,
+                album.Tracks
+            );
+            x.Id = album.Id;
+            x.OwnerId = album.OwnerId;
+            x.CoverImage = album.CoverImage;
+            return x;
         }
 
         public void DeleteAlbum(int id) {

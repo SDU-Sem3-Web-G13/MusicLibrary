@@ -1,5 +1,5 @@
 ﻿using Backend.DataAccess.Interfaces;
-using Backend.Models;
+using Backend.DataAccess.Dtos;
 
 namespace Backend.DataAccess
 {
@@ -64,15 +64,15 @@ namespace Backend.DataAccess
         #endregion
 
         #region Get Methods 
-        public List<UserModel> GetUsers()
+        public List<IUserDto> GetUsers()
         {
             string query = "SELECT * FROM USERS";
-            List<UserModel> users = new List<UserModel>();
+            List<IUserDto> users = new List<IUserDto>();
             using (var reader = _dataSource.ExecuteReader(query))
             {
                 while (reader.Read())
                 {
-                    UserModel user = new UserModel(
+                    IUserDto user = new UserDto(
                         reader.GetInt32(0),
                         reader.GetString(1),
                         reader.GetString(2),
@@ -84,14 +84,14 @@ namespace Backend.DataAccess
             return users;
         }
 
-        public UserModel GetSingleUser(int id)
+        public IUserDto GetSingleUser(int id)
         {
             string query = $"SELECT * FROM USERS WHERE U_ID = {id}";
             using (var reader = _dataSource.ExecuteReader(query))
             {
                 if (reader.Read())
                 {
-                    return new UserModel(
+                    return new UserDto(
                         reader.GetInt32(0),
                         reader.GetString(1),
                         reader.GetString(2),

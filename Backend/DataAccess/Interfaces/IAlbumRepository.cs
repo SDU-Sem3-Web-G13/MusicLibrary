@@ -1,4 +1,4 @@
-using Backend.Models;
+using Backend.DataAccess.Dtos;
 
 namespace Backend.DataAccess.Interfaces
 {
@@ -8,7 +8,7 @@ namespace Backend.DataAccess.Interfaces
         public void DeleteAlbum(int id);
         public void DeleteAllUserAlbums(int userId);
         public void ModifyAlbum(int id, int owner, byte[]? cover, string albumName, DateTime releaseDate, string artist, string type, string description, string[] tracks);
-        public List<AlbumModel> GetAlbums(int userID);
-        public AlbumModel GetSingleAlbum(int albumId);
+        public List<IAlbumDto> GetAlbums(int userID);
+        public IAlbumDto GetSingleAlbum(int albumId);
     }
 }

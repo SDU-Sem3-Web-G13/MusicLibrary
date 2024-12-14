@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Backend.Models;
 using Frontend.Models;
 
 public class LoginViewModel : PageModel
