@@ -3,7 +3,7 @@ using Backend.DataAccess;
 using Backend.DataAccess.Interfaces;
 using Backend.Services;
 
-namespace Backend.Models;
+namespace Frontend.Models;
 
 public class LoginUser
 {
@@ -31,17 +31,17 @@ public class UniqueEmailAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
     {
-        var LoginRegisterService = validationContext.GetService(typeof(ILoginRegisterService)) as ILoginRegisterService;
+        var LoginRegisterModel = validationContext.GetService(typeof(ILoginRegisterModel)) as ILoginRegisterModel;
         var email = value as string ?? "";
         var user = validationContext.ObjectInstance as LoginUser;
 
-        if (user != null && LoginRegisterService != null) 
+        if (user != null && LoginRegisterModel != null) 
         {
-            if(user.SourcePage == "RegistrationPage" && LoginRegisterService.EmailExists(email))
+            if(user.SourcePage == "RegistrationPage" && LoginRegisterModel.EmailExists(email))
             {
                 return new ValidationResult("User with that Email already exists.");
             }
-            else if(user.SourcePage == "LoginPage" && !LoginRegisterService.EmailExists(email))
+            else if(user.SourcePage == "LoginPage" && !LoginRegisterModel.EmailExists(email))
             {
                 return new ValidationResult("User with that Email does not exist.");
             }

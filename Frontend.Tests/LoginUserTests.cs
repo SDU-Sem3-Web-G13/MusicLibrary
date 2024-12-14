@@ -1,12 +1,12 @@
-namespace Backend.Tests
+namespace Frontend.Tests
 {
     public class LoginUserTests
     {
-        private Mock<ILoginRegisterService> mockLoginRegisterService;
+        private Mock<ILoginRegisterModel> mockLoginRegisterModel;
 
         public LoginUserTests()
         {
-            mockLoginRegisterService = new Mock<ILoginRegisterService>();
+            mockLoginRegisterModel = new Mock<ILoginRegisterModel>();
         }
 
         [Fact]
@@ -22,7 +22,7 @@ namespace Backend.Tests
                 SourcePage = "RegistrationPage"
             };
 
-            var validationResults = ValidateModel(user, mockLoginRegisterService.Object);
+            var validationResults = ValidateModel(user, mockLoginRegisterModel.Object);
 
             Assert.Empty(validationResults);
         }
@@ -39,7 +39,7 @@ namespace Backend.Tests
                 SourcePage = "RegistrationPage"
             };
 
-            var validationResults = ValidateModel(user, mockLoginRegisterService.Object);
+            var validationResults = ValidateModel(user, mockLoginRegisterModel.Object);
 
             Assert.Contains(validationResults, v => v.ErrorMessage == "First name is required.");
         }
@@ -57,7 +57,7 @@ namespace Backend.Tests
                 SourcePage = "RegistrationPage"
             };
 
-            var validationResults = ValidateModel(user, mockLoginRegisterService.Object);
+            var validationResults = ValidateModel(user, mockLoginRegisterModel.Object);
 
             Assert.Contains(validationResults, v => v.ErrorMessage == "Invalid email address.");
         }
@@ -75,7 +75,7 @@ namespace Backend.Tests
                 SourcePage = "RegistrationPage"
             };
 
-            var validationResults = ValidateModel(user, mockLoginRegisterService.Object);
+            var validationResults = ValidateModel(user, mockLoginRegisterModel.Object);
 
             Assert.Contains(validationResults, v => v.ErrorMessage == "Passwords do not match.");
         }
@@ -83,7 +83,7 @@ namespace Backend.Tests
         [Fact]
         public void UniqueEmail_Registration_ShouldFailValidation()
         {
-            mockLoginRegisterService.Setup(repo => repo.EmailExists(It.IsAny<string>())).Returns(true);
+            mockLoginRegisterModel.Setup(repo => repo.EmailExists(It.IsAny<string>())).Returns(true);
 
             var user = new LoginUser
             {
@@ -95,7 +95,7 @@ namespace Backend.Tests
                 SourcePage = "RegistrationPage"
             };
 
-            var validationResults = ValidateModel(user, mockLoginRegisterService.Object);
+            var validationResults = ValidateModel(user, mockLoginRegisterModel.Object);
 
             Assert.Contains(validationResults, v => v.ErrorMessage == "User with that Email already exists.");
         }
@@ -103,7 +103,7 @@ namespace Backend.Tests
         [Fact]
         public void UniqueEmail_Login_ShouldFailValidation()
         {
-            mockLoginRegisterService.Setup(repo => repo.EmailExists(It.IsAny<string>())).Returns(false);
+            mockLoginRegisterModel.Setup(repo => repo.EmailExists(It.IsAny<string>())).Returns(false);
 
             var user = new LoginUser
             {
@@ -115,17 +115,17 @@ namespace Backend.Tests
                 SourcePage = "LoginPage"
             };
 
-            var validationResults = ValidateModel(user, mockLoginRegisterService.Object);
+            var validationResults = ValidateModel(user, mockLoginRegisterModel.Object);
 
             Assert.Contains(validationResults, v => v.ErrorMessage == "User with that Email does not exist.");
         }
 
-        private IList<ValidationResult> ValidateModel(object model, ILoginRegisterService loginRegisterService)
+        private IList<ValidationResult> ValidateModel(object model, ILoginRegisterModel loginRegisterModel)
         {
             var validationContext = new ValidationContext(model);
-            if (loginRegisterService != null)
+            if (loginRegisterModel != null)
             {
-                validationContext.InitializeServiceProvider(serviceType => loginRegisterService);
+                validationContext.InitializeServiceProvider(serviceType => loginRegisterModel);
             }
             var validationResults = new List<ValidationResult>();
             Validator.TryValidateObject(model, validationContext, validationResults, true);
