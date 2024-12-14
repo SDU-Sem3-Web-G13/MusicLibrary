@@ -13,7 +13,6 @@ global using Frontend.Tests.Mocks;
 
 // Backend
 global using Backend;
-global using Backend.Models;
 global using Backend.Enums;
 global using Backend.DataAccess.Interfaces;
 global using Backend.DataAccess;
@@ -22,6 +21,7 @@ global using Backend.Services;
 // frontend
 global using Frontend;
 global using Frontend.Models;
+global using Frontend.Objects;
 global using RazorMusic.Pages;
 
 global using Microsoft.AspNetCore.Http;

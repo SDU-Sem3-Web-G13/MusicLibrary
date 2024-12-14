@@ -1,3 +1,4 @@
+using Backend.Services.ServiceDtos;
 using Microsoft.AspNetCore.Http;
 
 namespace Frontend.Tests.ModelTests
@@ -18,18 +19,18 @@ namespace Frontend.Tests.ModelTests
         {
             // Arrange
             var userId = 1;
-            var expectedAlbums = new List<AlbumModel>
+            var expectedAlbums = new List<IAlbumServiceDto>
             {
-                new AlbumModel("Album1", DateTime.Now, "Artist1", "Type1", "Description1", new string[] { "Track1", "Track2" }) { Id = 1 },
-                new AlbumModel("Album2", DateTime.Now, "Artist2", "Type2", "Description2", new string[] { "Track3", "Track4" }) { Id = 2 }
+                new AlbumServiceDto("Album1", DateTime.Now, "Artist1", "Type1", "Description1", new string[] { "Track1", "Track2" }) { Id = 1 },
+                new AlbumServiceDto("Album2", DateTime.Now, "Artist2", "Type2", "Description2", new string[] { "Track3", "Track4" }) { Id = 2 }
             };
             _mockAlbumsService.Setup(service => service.GetAlbums(userId)).Returns(expectedAlbums);
 
             // Act
-            var result = _albumsModel.GetAlbums(userId);
+            var result = _albumsModel.GetAlbums(userId).Select(album => new AlbumModel(album.AlbumName, album.ReleaseDate, album.Artist, album.AlbumType, album.Description, album.Tracks) { Id = album.Id }).ToList();
 
             // Assert
-            Assert.Equal(expectedAlbums, result);
+            result.Should().BeEquivalentTo(expectedAlbums);
         }
 
         [Fact]
@@ -37,14 +38,14 @@ namespace Frontend.Tests.ModelTests
         {
             // Arrange
             var albumId = 1;
-            var expectedAlbum = new AlbumModel("Album1", DateTime.Now, "Artist1", "Type1", "Description1", new string[] { "Track1", "Track2" }) { Id = albumId };
+            var expectedAlbum = new AlbumServiceDto("Album1", DateTime.Now, "Artist1", "Type1", "Description1", new string[] { "Track1", "Track2" }) { Id = albumId };
             _mockAlbumsService.Setup(service => service.GetSingleAlbum(albumId)).Returns(expectedAlbum);
 
             // Act
             var result = _albumsModel.GetSingleAlbum(albumId);
 
             // Assert
-            Assert.Equal(expectedAlbum, result);
+            result.Should().BeEquivalentTo(expectedAlbum);
         }
 
         [Fact]

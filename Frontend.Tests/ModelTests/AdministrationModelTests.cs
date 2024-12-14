@@ -1,3 +1,5 @@
+using Backend.Services.ServiceDtos;
+
 namespace Frontend.Tests.ModelTests
 {
     public class AdministrationModelTests
@@ -15,18 +17,18 @@ namespace Frontend.Tests.ModelTests
         public void GetUsers_ReturnsListOfUsers()
         {
             // Arrange
-            var expectedUsers = new List<UserModel>
+            var expectedUsers = new List<IUserServiceDto>
             {
-                new UserModel(1, "User1", "user1@example.com", true),
-                new UserModel(2, "User2", "user2@example.com", true)
+                new UserServiceDto(1, "User1", "user1@example.com", true),
+                new UserServiceDto(2, "User2", "user2@example.com", true)
             };
             _mockAdministrationService.Setup(service => service.GetUsers()).Returns(expectedUsers);
 
             // Act
-            var result = _administrationModel.GetUsers();
+            var result = _administrationModel.GetUsers().Select(user => new UserServiceDto(user.Id, user.Name, user.Mail, user.IsAdmin)).ToList();
 
             // Assert
-            Assert.Equal(expectedUsers, result);
+            result.Should().BeEquivalentTo(expectedUsers);
         }
 
         [Fact]
