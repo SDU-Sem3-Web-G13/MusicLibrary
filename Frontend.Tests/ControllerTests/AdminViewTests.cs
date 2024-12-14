@@ -9,7 +9,6 @@ namespace Frontend.Tests.ControllerTests
 {
     public class AdminViewTests
     {
-        private readonly Mock<ILogger<AdminViewModel>> _mockLogger;
         private readonly Mock<ILoginRegisterModel> _mockLoginRegisterModel;
         private readonly Mock<IAlbumsModel> _mockAlbumsModel;
         private readonly Mock<IAdministrationModel> _mockAdministrationModel;
@@ -18,11 +17,10 @@ namespace Frontend.Tests.ControllerTests
 
         public AdminViewTests()
         {
-            _mockLogger = new Mock<ILogger<AdminViewModel>>();
             _mockLoginRegisterModel = new Mock<ILoginRegisterModel>();
             _mockAlbumsModel = new Mock<IAlbumsModel>();
             _mockAdministrationModel = new Mock<IAdministrationModel>();
-            _adminViewModel = new AdminViewModel(_mockLogger.Object, _mockLoginRegisterModel.Object, _mockAlbumsModel.Object, _mockAdministrationModel.Object);
+            _adminViewModel = new AdminViewModel(_mockLoginRegisterModel.Object, _mockAlbumsModel.Object, _mockAdministrationModel.Object);
 
             var services = new ServiceCollection();
             services.AddDistributedMemoryCache();
