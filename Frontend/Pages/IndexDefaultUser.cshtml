@@ -1,0 +1,24 @@
+﻿@page
+@model IndexDefaultUserModel
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Music Library</title>
+</head>
+
+<body>
+    <div style="background-image:url(~/background.jpg)" class="container h-100">
+        <div class="text-center">
+            <h1 class="display-1 text-black">Welcome</h1>
+            <p>
+                Immerse yourself in the world of your favorite artists' albums and singles, where you can add, edit, and view their incredible work.
+            </p>
+
+            <p>Join Us and be a part of the best music community! </p><br />
+            <a asp-page="/Login" class="btn btn-primary" style="width: 220px; margin: 5px">Log in as member</a>
+            <a asp-page="/Register" class="btn btn-primary" style="width: 220px; margin: 5px">Sign up for membership</a>
+        </div>
+    </div>
+</body>
+</html>
