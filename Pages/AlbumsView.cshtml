@@ -51,7 +51,6 @@
 
     .export-btn {
     color: white;
-    <!--padding: 10px 20px;-->
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -86,11 +85,11 @@
     <button type="button" class="btn btn-primary" style="position: fixed; bottom: 100px; right: 50px;" onclick="event.stopPropagation(); showCreateModal()">
         Add Album
     </button>
-    <form method="post" asp-page-handler="ExportCsv">
+    <form method="post" asp-page-handler="ExportCsv" id="exportForm">
     <button type="submit" class="btn btn-primary export-btn">
-        <i class="fas fa-download"></i> Export to ZIP
+        <i class="fas fa-download"></i> Export your albums
     </button>
-</form>
+    </form>
 </div>
 
 <!-- Album Detail Modal -->
@@ -589,4 +588,40 @@
 
         document.getElementById('tracksContainer').appendChild(newTrackInput);
     }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('exportForm');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            try {
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    body: new FormData(form)
+                });
+                
+                if (response.ok) {
+                    const password = response.headers.get('X-Export-Password');
+                    if (password) {
+                        alert(`Password for your exported file: ${password}`);
+                    }
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = 'exported_albums_with_covers.zip';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                } else {
+                    alert('Export failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Export error:', error);
+                alert('An error occurred during export. Please try again.');
+            }
+        });
+    });
 </script>

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Models;
 using Models.DataAccess;
 using System.Text;
-using System.IO.Compression;
 using ICSharpCode.SharpZipLib.Zip;
 
 namespace RazorMusic.Pages
@@ -101,66 +100,67 @@ namespace RazorMusic.Pages
             var base64Image = Convert.ToBase64String(album.CoverImage);
             return new JsonResult(new { success = true, coverImage = base64Image });
         }
-        public FileResult OnPostExportCsv()
-{
-    ValidateSessionStorage();
-    GetUserAlbums();
+        public IActionResult OnPostExportCsv(){
+            ValidateSessionStorage();
+            GetUserAlbums();
 
-    var csv = new StringBuilder();
-    csv.AppendLine("Album's Id,Album's Name,Release Date,Artist,Album's Type,Description,Tracks");
-    foreach (var album in Albums)
-    {
-        csv.AppendLine($"{album.Id},{album.AlbumName},{album.ReleaseDate:yyyy-MM-dd},{album.Artist},{album.AlbumType},{album.Description},{string.Join("|", album.Tracks)}");
-    }
-    byte[] csvBytes = Encoding.UTF8.GetBytes(csv.ToString());
-
-    string? userPassword = HttpContext.Session.GetString("userPassword");
-    if (string.IsNullOrEmpty(userPassword))
-    {
-        Console.WriteLine("User password not found in session.");
-        return File(new byte[0], "application/zip", "error.zip");
-    }
-
-    using var memoryStream = new MemoryStream();
-    using (var zipOutputStream = new ZipOutputStream(memoryStream))
-    {
-        zipOutputStream.SetLevel(9); 
-        zipOutputStream.Password = userPassword; 
-
-        var csvEntry = new ZipEntry("exported_albums.csv")
-        {
-            DateTime = DateTime.Now,
-            Size = csvBytes.Length
-        };
-        zipOutputStream.PutNextEntry(csvEntry);
-        zipOutputStream.Write(csvBytes, 0, csvBytes.Length);
-        zipOutputStream.CloseEntry();
-
-        foreach (var album in Albums)
-        {
-            if (album.CoverImage != null && album.CoverImage.Length > 0)
+            var csv = new StringBuilder();
+            csv.AppendLine("Album's Id,Album's Name,Release Date,Artist,Album's Type,Description,Tracks");
+            foreach (var album in Albums)
             {
-                var imageEntry = new ZipEntry($"cover_images/album_{album.Id}.jpg")
+                csv.AppendLine($"{album.Id},{album.AlbumName},{album.ReleaseDate:yyyy-MM-dd},{album.Artist},{album.AlbumType},{album.Description},{string.Join("|", album.Tracks)}");
+            }
+            byte[] csvBytes = Encoding.UTF8.GetBytes(csv.ToString());
+
+            using var memoryStream = new MemoryStream();
+            using (var zipStream = new ZipOutputStream(memoryStream))
+            {
+                zipStream.SetLevel(9); 
+
+                // Generate a random password
+                var password = GenerateRandomPassword();
+                zipStream.Password = password;
+
+                Response.Headers.Append("X-Export-Password", password);
+
+                var csvEntry = new ZipEntry("exported_albums.csv")
                 {
                     DateTime = DateTime.Now,
-                    Size = album.CoverImage.Length
+                    Size = csvBytes.Length
                 };
-                zipOutputStream.PutNextEntry(imageEntry);
-                zipOutputStream.Write(album.CoverImage, 0, album.CoverImage.Length);
-                zipOutputStream.CloseEntry();
+                zipStream.PutNextEntry(csvEntry);
+                zipStream.Write(csvBytes, 0, csvBytes.Length);
+                zipStream.CloseEntry();
+
+                foreach (var album in Albums)
+                {
+                    if (album.CoverImage != null && album.CoverImage.Length > 0)
+                    {
+                        var coverEntry = new ZipEntry($"cover_images/album_{album.Id}.jpg")
+                        {
+                            DateTime = DateTime.Now,
+                            Size = album.CoverImage.Length
+                        };
+                        zipStream.PutNextEntry(coverEntry);
+                        zipStream.Write(album.CoverImage, 0, album.CoverImage.Length);
+                        zipStream.CloseEntry();
+                    }
+                }
+
+                zipStream.Finish();
+                return File(memoryStream.ToArray(), "application/zip", "exported_albums_with_covers.zip");
             }
         }
-        zipOutputStream.Finish(); 
-    }
 
-    //memoryStream.Seek(0, SeekOrigin.Begin); // Reset the memory stream position to the beginning
-    return File(memoryStream.ToArray(), "application/zip", "exported_albums_with_covers.zip");
-}
-
+        private string GenerateRandomPassword()
+        {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        var random = new Random();
+        return new string(Enumerable.Repeat(chars, 12).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
 
     public class AlbumInputModel
-    {   
-        public int AlbumId { get; set; }
+    {           public int AlbumId { get; set; }
         public int AlbumOwnerId { get; set; } 
         public string AlbumName { get; set; } = null!;
         public DateTime ReleaseDate { get; set; }
