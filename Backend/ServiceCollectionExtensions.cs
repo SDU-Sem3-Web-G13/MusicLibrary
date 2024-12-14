@@ -11,10 +11,12 @@ namespace Backend
         public static IServiceCollection AddBackendServices(this IServiceCollection services)
         {
             // Register DataSrouce
-            services.AddScoped<NpgsqlConnection>(provider => PostgresDataSource.CreateConnection());
+            services.AddScoped<NpgsqlConnection>
+            (
+                provider => 
+                PostgresDataSource.CreateConnection()
+            );
             services.AddScoped<IDataSource, PostgresDataSource>();
-            services.AddScoped<SqlAlbumRepository>();
-            services.AddScoped<SqlUserRepository>();
 
             // Register repositories
             services.AddScoped<IUserRepository, SqlUserRepository>();
