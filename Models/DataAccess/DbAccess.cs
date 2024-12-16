@@ -32,7 +32,7 @@ namespace Models.DataAccess
                 servicename = "localhost";
             }
             connectionString = $"Host={servicename};Port={port};Database={dbName};User Id={user};Password={password};";
-            //connectionString = "Host=localhost;Port=5434;Database=docker;User Id=docker;Password=docker;";
+            
 
             dbDataSource = NpgsqlDataSource.Create(connectionString);
         }
